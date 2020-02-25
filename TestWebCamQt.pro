@@ -12,12 +12,14 @@ TARGET = TestWebCamQt
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        widget.cpp
+SOURCES += main.cpp \
+    camera.cpp
 
-HEADERS  += widget.h
+HEADERS  += \
+    camera.h
 
-FORMS    += widget.ui
+FORMS    += \
+    camera.ui
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 

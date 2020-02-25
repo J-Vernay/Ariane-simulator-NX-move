@@ -1,10 +1,10 @@
-#include "widget.h"
+#include "camera.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
+    Camera w;
     w.show();
 
     return a.exec();

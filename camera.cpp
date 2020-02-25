@@ -1,11 +1,11 @@
 #include "opencv2/opencv.hpp"
-#include "widget.h"
+#include "camera.h"
 #include "ui_widget.h"
 #include <QString>
 
 using namespace cv;
 
-Widget::Widget(QWidget *parent) :
+Camera::Camera(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
 {
@@ -32,14 +32,14 @@ Widget::Widget(QWidget *parent) :
 }
 
 
-Widget::~Widget()
+Camera::~Camera()
 {
     delete ui;
     delete webCam_;
 }
 
 
-void Widget::on_timer_interval()
+void Camera::on_timer_interval()
 {
     if (webCam_->isOpened()) {
         Mat image;

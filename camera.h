@@ -11,13 +11,13 @@ namespace Ui {
 class Widget;
 }
 
-class Widget : public QWidget
+class Camera : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Widget(QWidget *parent = 0);
-    ~Widget();
+    explicit Camera(QWidget *parent = 0);
+    ~Camera();
 
 private:
     Ui::Widget *ui;
