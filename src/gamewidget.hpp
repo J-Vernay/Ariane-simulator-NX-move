@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include "glscenewidget.hpp"
+#include "mazemapwidget.hpp"
 
 class GameWidget : public QWidget
 {
@@ -13,8 +14,12 @@ public:
     explicit GameWidget(QWidget *parent = nullptr);
 
 private:
+    // Widgets
     GLSceneWidget mSceneWidget;
+    MazeMapWidget mMapWidget;
+
     QVBoxLayout * mainLayout;
+
 };
 
 #endif // GAMEWIDGET_HPP
