@@ -12,6 +12,7 @@
 class MazeMapWidget : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit MazeMapWidget(QWidget *parent = nullptr);
 
@@ -27,6 +28,7 @@ private:
 
 
 public slots:
+    // Slots pour afficher / cacher la minimap
     void hide();
     void show();
 

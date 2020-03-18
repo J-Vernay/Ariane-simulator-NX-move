@@ -6,6 +6,7 @@
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
 
+
 GameWidget::GameWidget(QWidget *parent) :
     QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget)
 {
