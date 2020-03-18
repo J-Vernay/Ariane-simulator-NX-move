@@ -7,6 +7,7 @@
 #include <QTimer>
 
 #include "../models/maze.h"
+#include "../player.hpp"
 
 /**
  * @brief Classe d'affichage de la minimap
@@ -24,6 +25,10 @@ public:
     // Fonction pour désigner le labyrinthe
     void setMaze(Maze * maze) { mMaze = maze; };
 
+    // Fonction pour désigner le joueur
+    void setPlayer(Player * player) { mPlayer = player; };
+
+
 private:
     // Effet d'affichage en transparence
     QGraphicsOpacityEffect mOpacityEffect;
@@ -33,6 +38,9 @@ private:
 
     // Labyrinthe
     Maze * mMaze = nullptr;
+
+    // Joueur
+    Player * mPlayer = nullptr;
 
 
 public slots:

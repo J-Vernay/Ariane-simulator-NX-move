@@ -26,17 +26,16 @@ void MazeMapWidget::paintEvent(QPaintEvent *event)
     QRectF bounds(0, 0, width(), height());
     painter.fillRect(bounds, Qt::white);
 
+    // Définition de constantes
+    const int MARGIN = 10;
+    const int BEGIN = MARGIN;
+    const int Y_STEP = (height() - 2 * MARGIN) / mMaze->getHeight();
+    const int X_STEP = (width() - 2 * MARGIN) / mMaze->getWidth();
+    const int PLAYER_RADIUS = 5;
+
     // Dessin du labyrinthe
     if (mMaze != nullptr)
     {
-        const int MARGIN = 10;
-        const int BEGIN = MARGIN;
-        const int X_END = width() - MARGIN;
-        const int Y_END = height() - MARGIN;
-
-        const int Y_STEP = (height() - 2 * MARGIN) / mMaze->getHeight();
-        const int X_STEP = (width() - 2 * MARGIN) / mMaze->getWidth();
-
         // Configuration du stylo
         painter.setPen(Qt::black);
 
@@ -70,6 +69,18 @@ void MazeMapWidget::paintEvent(QPaintEvent *event)
                 }
             }
         }
+    }
+
+    // Dessin du joueur
+    if(mPlayer != nullptr)
+    {
+        // Selection du stylo
+        painter.setBrush(Qt::green);
+
+        // Récupération des coordonnées, et application à l'échelle de la minimap
+        int xPosition = BEGIN + mPlayer->getPosX() * X_STEP;
+        int yPosition = BEGIN + mPlayer->getPosY() * Y_STEP;
+        painter.drawEllipse(QPoint(xPosition, yPosition), PLAYER_RADIUS, PLAYER_RADIUS);
     }
 }
 

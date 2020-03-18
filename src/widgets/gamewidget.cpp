@@ -25,8 +25,6 @@ GameWidget::GameWidget(QWidget *parent) :
     connect(showButton, SIGNAL(pressed()), &mMapWidget, SLOT(show()));
 
     this->setLayout(mMainLayout);
-
-    mMapWidget.setMaze(mGameLogic.getMazePtr());
 }
 
 void GameWidget::resizeEvent(QResizeEvent *event)

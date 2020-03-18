@@ -7,4 +7,8 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
     : mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mMaze(MAZE_WIDTH, MAZE_HEIGHT)
 {
     mMaze.generate();
+
+    mPlayer.setPosition(0.5, 0.5);
+    mMapWidget->setPlayer(&mPlayer);
+    mMapWidget->setMaze(&mMaze);
 }
