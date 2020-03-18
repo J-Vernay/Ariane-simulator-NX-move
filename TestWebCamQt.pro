@@ -25,14 +25,14 @@ else {
 }
 
 SOURCES += main.cpp \
-    src/gamewidget.cpp \
-    src/glscenewidget.cpp \
-    src/mazemapwidget.cpp
+    src/widgets/gamewidget.cpp \
+    src/widgets/glscenewidget.cpp \
+    src/widgets/mazemapwidget.cpp
 
 HEADERS  += \
-    src/gamewidget.hpp \
-    src/glscenewidget.hpp \
-    src/mazemapwidget.hpp
+    src/widgets/gamewidget.hpp \
+    src/widgets/glscenewidget.hpp \
+    src/widgets/mazemapwidget.hpp
 
 FORMS    +=
 
