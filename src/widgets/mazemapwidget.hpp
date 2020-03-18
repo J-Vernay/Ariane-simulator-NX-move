@@ -6,6 +6,8 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
+#include "../models/maze.h"
+
 /**
  * @brief Classe d'affichage de la minimap
  */
@@ -19,12 +21,18 @@ public:
     // Fonction de dessin
     void paintEvent(QPaintEvent *event) override;
 
+    // Fonction pour désigner le labyrinthe
+    void setMaze(Maze * maze) { mMaze = maze; };
+
 private:
     // Effet d'affichage en transparence
     QGraphicsOpacityEffect mOpacityEffect;
 
     // Animation de fade-in / fade-out
     QPropertyAnimation mOpacityAnimation;
+
+    // Labyrinthe
+    Maze * mMaze = nullptr;
 
 
 public slots:

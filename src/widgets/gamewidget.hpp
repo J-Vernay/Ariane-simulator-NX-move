@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include "glscenewidget.hpp"
 #include "mazemapwidget.hpp"
+#include "../gamelogic.hpp"
 
 /**
  * @brief Widget principal du jeu
@@ -22,7 +23,11 @@ private:
     MazeMapWidget mMapWidget;
 
     // Layout principal
-    QVBoxLayout * mainLayout;
+    QVBoxLayout * mMainLayout;
+
+    // Logique de jeu
+    GameLogic mGameLogic;
+
 };
 
 #endif // GAMEWIDGET_HPP

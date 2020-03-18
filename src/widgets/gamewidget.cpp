@@ -8,22 +8,23 @@ const unsigned int WIN_HEIGHT = 900;
 
 
 GameWidget::GameWidget(QWidget *parent) :
-    QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget)
+    QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget), mGameLogic(&mSceneWidget, &mMapWidget)
 {
     resize(WIN_WIDTH, WIN_HEIGHT);
 
-    mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(&mSceneWidget);
+    mMainLayout = new QVBoxLayout(this);
+    mMainLayout->addWidget(&mSceneWidget);
 
     QPushButton * hideButton = new QPushButton("HIDE", this);
-    mainLayout->addWidget(hideButton);
+    mMainLayout->addWidget(hideButton);
     connect(hideButton, SIGNAL(pressed()), &mMapWidget, SLOT(hide()));
 
     QPushButton * showButton = new QPushButton("SHOW", this);
-    mainLayout->addWidget(showButton);
+    mMainLayout->addWidget(showButton);
     connect(showButton, SIGNAL(pressed()), &mMapWidget, SLOT(show()));
 
-    this->setLayout(mainLayout);
+    this->setLayout(mMainLayout);
 
     mMapWidget.setGeometry(0, 0, 300, 200);
+    mMapWidget.setMaze(mGameLogic.getMazePtr());
 }

@@ -34,6 +34,10 @@ public:
     void reinit();
     void display(bool pause=false);
     void generate(bool show=false);
+
+    int getWidth() { return width_; };
+    int getHeight() { return height_; };
+    auto getGrid() { return grid_; };
 };
 
 #endif // MAZE_H

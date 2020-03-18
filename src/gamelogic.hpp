@@ -10,12 +10,14 @@
  */
 class GameLogic
 {
-    GLSceneWidget * sceneWidget;
-    MazeMapWidget * mapWidget;
-    Maze maze;
+    GLSceneWidget * mSceneWidget;
+    MazeMapWidget * mMapWidget;
+    Maze mMaze;
 
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget);
+
+    Maze * getMazePtr() { return &mMaze; };
 };
 
 #endif // GAMELOGIC_HPP
