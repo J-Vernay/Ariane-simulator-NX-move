@@ -17,6 +17,8 @@ class GameWidget : public QWidget
 public:
     explicit GameWidget(QWidget *parent = nullptr);
 
+    void resizeEvent(QResizeEvent *event) override;
+
 private:
     // Widgets contenus
     GLSceneWidget mSceneWidget;

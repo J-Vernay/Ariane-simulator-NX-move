@@ -5,6 +5,7 @@
 // Declarations des constantes
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
+const double MINIMAP_SCALE = 0.2;
 
 
 GameWidget::GameWidget(QWidget *parent) :
@@ -25,6 +26,10 @@ GameWidget::GameWidget(QWidget *parent) :
 
     this->setLayout(mMainLayout);
 
-    mMapWidget.setGeometry(0, 0, 300, 200);
     mMapWidget.setMaze(mGameLogic.getMazePtr());
+}
+
+void GameWidget::resizeEvent(QResizeEvent *event)
+{
+    mMapWidget.setGeometry(0, 0, width() * MINIMAP_SCALE, height() * MINIMAP_SCALE);
 }
