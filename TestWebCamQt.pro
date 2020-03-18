@@ -25,11 +25,14 @@ else {
 }
 
 SOURCES += main.cpp \
+    src/models/maze.cpp \
     src/widgets/gamewidget.cpp \
     src/widgets/glscenewidget.cpp \
     src/widgets/mazemapwidget.cpp
 
 HEADERS  += \
+    src/models/cell.h \
+    src/models/maze.h \
     src/widgets/gamewidget.hpp \
     src/widgets/glscenewidget.hpp \
     src/widgets/mazemapwidget.hpp
