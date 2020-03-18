@@ -3,7 +3,7 @@
 #include <GL/glu.h>
 #include <QDesktopWidget>
 
-GLSceneWidget::GLSceneWidget(QWidget *parent) : QGLWidget(parent)
+GLSceneWidget::GLSceneWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     //move(QApplication::desktop()->rect().center() - rect().center());
 }
@@ -27,6 +27,19 @@ void GLSceneWidget::resizeGL(int width, int height)
 
 void GLSceneWidget::paintGL()
 {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
     // Reset des tampons
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glBegin(GL_QUADS);
+    glColor3ub(255, 0, 0);
+    glVertex2d(-1, -1);
+    glVertex2d(-1, 1);
+    glVertex2d(1, 1);
+    glVertex2d(1, -1);
+    glEnd();
+
+    glPopMatrix();
 }

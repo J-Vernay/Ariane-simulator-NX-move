@@ -1,12 +1,12 @@
 #ifndef GLSCENEWIDGET_HPP
 #define GLSCENEWIDGET_HPP
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 
 /**
  * @brief Classe d'affichage de la scene 3D OpenGL
  */
-class GLSceneWidget : public QGLWidget
+class GLSceneWidget : public QOpenGLWidget
 {
     Q_OBJECT
 

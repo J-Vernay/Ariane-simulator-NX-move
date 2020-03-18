@@ -19,7 +19,6 @@ private:
     MazeMapWidget mMapWidget;
 
     QVBoxLayout * mainLayout;
-
 };
 
 #endif // GAMEWIDGET_HPP

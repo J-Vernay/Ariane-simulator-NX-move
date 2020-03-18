@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QTimer>
 
 /**
  * @brief Classe d'affichage de la minimap
@@ -17,7 +19,16 @@ public:
     void paintEvent(QPaintEvent *event) override;
 
 private:
+    // Effet d'affichage en transparence
     QGraphicsOpacityEffect mOpacityEffect;
+
+    // Animation de fade-in / fade-out
+    QPropertyAnimation mOpacityAnimation;
+
+
+public slots:
+    void hide();
+    void show();
 
 };
 
