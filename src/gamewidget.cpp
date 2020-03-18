@@ -25,5 +25,4 @@ GameWidget::GameWidget(QWidget *parent) :
     this->setLayout(mainLayout);
 
     mMapWidget.setGeometry(0, 0, 300, 200);
-    mMapWidget.show();
 }
