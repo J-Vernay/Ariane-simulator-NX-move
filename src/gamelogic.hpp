@@ -16,7 +16,7 @@ class GameLogic
     Maze mMaze;
     Player mPlayer;
 
-    bool isForbidden(int oldX, int oldY, int newX, int newY);
+    void handleCollisions(double oldX, double oldY, double newX, double newY);
 
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget);
