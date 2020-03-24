@@ -16,8 +16,13 @@ class GameLogic
     Maze mMaze;
     Player mPlayer;
 
+    bool isForbidden(int oldX, int oldY, int newX, int newY);
+
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget);
+
+    enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
+    void movePlayer(Direction direction);
 };
 
 #endif // GAMELOGIC_HPP

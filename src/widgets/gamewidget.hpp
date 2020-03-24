@@ -19,6 +19,9 @@ public:
 
     void resizeEvent(QResizeEvent *event) override;
 
+    // Touches claviers : TEMPORAIRE
+    void keyPressEvent(QKeyEvent *event) override;
+
 private:
     // Widgets contenus
     GLSceneWidget mSceneWidget;

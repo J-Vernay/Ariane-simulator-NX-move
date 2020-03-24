@@ -1,5 +1,6 @@
 #include "mazemapwidget.hpp"
 #include <QPainter>
+#include <cmath>
 #include <QDebug>
 
 const double MAXOPACITY = 0.7;
@@ -81,6 +82,10 @@ void MazeMapWidget::paintEvent(QPaintEvent *event)
         int xPosition = BEGIN + mPlayer->getPosX() * X_STEP;
         int yPosition = BEGIN + mPlayer->getPosY() * Y_STEP;
         painter.drawEllipse(QPoint(xPosition, yPosition), PLAYER_RADIUS, PLAYER_RADIUS);
+
+        double angle = mPlayer->getAngle();
+        painter.setPen(Qt::darkGreen);
+        painter.drawLine(xPosition, yPosition, xPosition + std::cos(angle) * X_STEP * 0.5, yPosition + std::sin(angle) * Y_STEP * 0.5);
     }
 }
 

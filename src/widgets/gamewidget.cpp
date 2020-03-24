@@ -1,6 +1,7 @@
 #include "gamewidget.hpp"
 
 #include <QPushButton>
+#include <QKeyEvent>
 
 // Declarations des constantes
 const unsigned int WIN_WIDTH  = 1600;
@@ -25,9 +26,30 @@ GameWidget::GameWidget(QWidget *parent) :
     connect(showButton, SIGNAL(pressed()), &mMapWidget, SLOT(show()));
 
     this->setLayout(mMainLayout);
+
+    mSceneWidget.setFocusPolicy(Qt::StrongFocus);
 }
 
 void GameWidget::resizeEvent(QResizeEvent *event)
 {
     mMapWidget.setGeometry(0, 0, width() * MINIMAP_SCALE, height() * MINIMAP_SCALE);
+}
+
+void GameWidget::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+        case Qt::Key_Up:
+            mGameLogic.movePlayer(GameLogic::Direction::FORWARD);
+            break;
+        case Qt::Key_Down:
+            mGameLogic.movePlayer(GameLogic::Direction::BACKWARD);
+            break;
+        case Qt::Key_Left:
+            mGameLogic.movePlayer(GameLogic::Direction::LEFT);
+            break;
+        case Qt::Key_Right:
+            mGameLogic.movePlayer(GameLogic::Direction::RIGHT);
+            break;
+    }
 }

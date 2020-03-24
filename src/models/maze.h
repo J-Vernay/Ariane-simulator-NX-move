@@ -38,6 +38,7 @@ public:
     int getWidth() { return width_; };
     int getHeight() { return height_; };
     auto getGrid() { return grid_; };
+    Cell& getCell(int x, int y) { return grid_[y][x]; };
 };
 
 #endif // MAZE_H
