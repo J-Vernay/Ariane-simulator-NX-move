@@ -5,7 +5,7 @@
 const int MAZE_WIDTH = 10;
 const int MAZE_HEIGHT = 8;
 
-void GameLogic::handleCollisions(double oldX, double oldY, double newX, double newY)
+void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, double newY)
 {
     // Calcul des index des cases pré et post déplacement
     int oldXi = std::floor(oldX);
@@ -75,12 +75,12 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
     {
         case Direction::FORWARD:
             mPlayer.goForward();
-            handleCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
+            handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
             break;
 
         case Direction::BACKWARD:
             mPlayer.goBackward();
-            handleCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
+            handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
             break;
         case Direction::LEFT:
             mPlayer.turnLeft();

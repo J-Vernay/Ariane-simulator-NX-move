@@ -3,21 +3,28 @@
 
 #include <cmath>
 
+/**
+ * @brief Classe de gestion du joueur, indépendemment de l'affichage graphique ou du labyrinthe
+ */
 class Player
 {
-    double mPosX, mPosY;
-    double mAngle;
-    const double mWalkSpeed = 0.2;
-    const double mRotateSpeed = M_PI / 30.0;
+    double mPosX, mPosY;                        // Position logique : une case du labyrinthe constitue 1 unité
+    double mAngle;                              // Orientation
+    const double mWalkSpeed = 0.2;              // Vitesse de déplacement du joueur
+    const double mRotateSpeed = M_PI / 30.0;    // Vitesse de rotation du joueur
 
 public:
     Player(double posx = 0.5, double poxy = 0.5, double angle = 0.0);
 
+    // Mutateur de la position brute
     void setPosition(double posx, double posy) { mPosX = posx; mPosY = posy; };
+
+    // Getters
     double getPosX() { return mPosX; };
     double getPosY() { return mPosY; };
     double getAngle() { return mAngle; };
 
+    // Fonctions de déplacement
     void goForward();
     void goBackward();
     void turnLeft();

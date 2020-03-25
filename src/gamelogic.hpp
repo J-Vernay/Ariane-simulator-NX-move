@@ -16,11 +16,14 @@ class GameLogic
     Maze mMaze;
     Player mPlayer;
 
-    void handleCollisions(double oldX, double oldY, double newX, double newY);
+    // Appeler après un déplacement logique. Cette méthode va corriger le déplacement du
+    //      joueur ssi ce dernier est entré en collision avec un mur
+    void handleWallCollisions(double oldX, double oldY, double newX, double newY);
 
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget);
 
+    // Fonction de déplacement du joueur, dans une direction définie par l'enum Direction.
     enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
     void movePlayer(Direction direction);
 };
