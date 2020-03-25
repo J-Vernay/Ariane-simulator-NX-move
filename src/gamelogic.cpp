@@ -64,6 +64,8 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
     mPlayer.setPosition(0.5, 0.5);
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
+    mSceneWidget->setMaze(&mMaze);
+    mSceneWidget->setPlayer(&mPlayer);
 }
 
 void GameLogic::movePlayer(GameLogic::Direction direction)
@@ -77,7 +79,6 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
             mPlayer.goForward();
             handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
             break;
-
         case Direction::BACKWARD:
             mPlayer.goBackward();
             handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
@@ -90,4 +91,5 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
             break;
     }
     mMapWidget->update();
+    mSceneWidget->update();
 }

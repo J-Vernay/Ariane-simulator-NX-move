@@ -2,6 +2,9 @@
 #define GLSCENEWIDGET_HPP
 
 #include <QOpenGLWidget>
+#include "../models/maze.h"
+#include "../models/cell.h"
+#include "../player.hpp"
 
 /**
  * @brief Classe d'affichage de la scene 3D OpenGL
@@ -10,9 +13,21 @@ class GLSceneWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
+    Maze * mMaze;
+    Player * mPlayer;
+
 public:
     // Constructeur
     explicit GLSceneWidget(QWidget *parent = nullptr);
+
+    // Asssociation avec le labyrinthe
+    void setMaze(Maze * maze) { mMaze = maze; };
+
+    // Association avec le joueur
+    void setPlayer(Player * player) { mPlayer = player; };
+
+    // Mise à jour de la position de la caméra
+    void updateView();
 
 protected:
 
