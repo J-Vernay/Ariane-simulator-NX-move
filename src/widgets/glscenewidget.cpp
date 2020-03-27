@@ -8,7 +8,6 @@
 const GLdouble X_STEP = 10;
 const GLdouble Y_STEP = -X_STEP;
 const GLdouble WALL_HEIGHT = 5;
-const GLdouble WALL_WIDTH = 0.1;
 
 GLSceneWidget::GLSceneWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
@@ -132,8 +131,6 @@ void GLSceneWidget::resizeGL(int width, int height)
 
 void GLSceneWidget::paintGL()
 {
-    qDebug() << "PAINT";
-
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 

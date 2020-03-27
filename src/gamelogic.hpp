@@ -24,7 +24,7 @@ public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget);
 
     // Fonction de déplacement du joueur, dans une direction définie par l'enum Direction.
-    enum Direction{FORWARD, BACKWARD, LEFT, RIGHT};
+    enum Direction{FORWARD, BACKWARD, LEFT, RIGHT, STOP};
     void movePlayer(Direction direction);
 };
 

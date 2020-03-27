@@ -51,5 +51,8 @@ void GameWidget::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Right:
             mGameLogic.movePlayer(GameLogic::Direction::RIGHT);
             break;
+        case Qt::Key_Return:
+            mGameLogic.movePlayer(GameLogic::Direction::STOP);
+            break;
     }
 }

@@ -92,4 +92,13 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
     }
     mMapWidget->update();
     mSceneWidget->update();
+
+    if (direction == Direction::STOP)
+    {
+        mMapWidget->show();
+    }
+    else
+    {
+        mMapWidget->hide();
+    }
 }
