@@ -26,9 +26,6 @@ public:
     // Association avec le joueur
     void setPlayer(Player * player) { mPlayer = player; };
 
-    // Mise à jour de la position de la caméra
-    void updateView();
-
 protected:
 
     // Fonction d'initialisation d'OpenGL
@@ -39,6 +36,12 @@ protected:
 
     // Fonction d'affichage OpenGL
     void paintGL();
+
+    // Mise à jour de la position de la caméra
+    void updateView();
+
+    // Affichage du labyrinthe
+    void displayWorld();
 
 
 };

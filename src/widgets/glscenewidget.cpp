@@ -30,54 +30,8 @@ void GLSceneWidget::updateView()
               0.0, 0.0, 1.0);
 }
 
-void GLSceneWidget::initializeGL()
+void GLSceneWidget::displayWorld()
 {
-    // Reglage de la couleur de fond
-    glColor3ub(0,0,0);
-
-    // Activation du z-buffer
-    glEnable(GL_DEPTH_TEST);
-
-    // Règlage de la lumière ambiante
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
-    glLightfv(GL_LIGHT0, GL_AMBIENT, white);
-
-}
-
-void GLSceneWidget::resizeGL(int width, int height)
-{
-    // Definition du viewport (zone d'affichage)
-    float zoom = std::min(width/16., height/9.);
-    float w = zoom * 16, h = zoom * 9;
-    glViewport((width-w)/2, (height-h)/2, w, h);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    // Reglage de la perspective
-    gluPerspective(70.0, 16.0/9.0, 0.1, 10 * X_STEP);
-
-}
-
-void GLSceneWidget::paintGL()
-{
-    qDebug() << "PAINT";
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    // Reset des tampons
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    if(mMaze == nullptr) return;
-
-    glPushMatrix();
-
-    // Déplacement de la caméra
-    updateView();
-
     GLfloat gray[] = { 0.5, 0.5, 0.5, 1.0 };
     glMaterialfv(GL_FRONT, GL_AMBIENT, gray);
 
@@ -143,6 +97,58 @@ void GLSceneWidget::paintGL()
     glVertex3d(0.0, mMaze->getHeight() * Y_STEP, WALL_HEIGHT);
 
     glEnd();
+}
+
+void GLSceneWidget::initializeGL()
+{
+    // Reglage de la couleur de fond
+    glColor3ub(0,0,0);
+
+    // Activation du z-buffer
+    glEnable(GL_DEPTH_TEST);
+
+    // Règlage de la lumière ambiante
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+
+}
+
+void GLSceneWidget::resizeGL(int width, int height)
+{
+    // Definition du viewport (zone d'affichage)
+    float zoom = std::min(width/16., height/9.);
+    float w = zoom * 16, h = zoom * 9;
+    glViewport((width-w)/2, (height-h)/2, w, h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Reglage de la perspective
+    gluPerspective(70.0, 16.0/9.0, 0.1, 10 * X_STEP);
+
+}
+
+void GLSceneWidget::paintGL()
+{
+    qDebug() << "PAINT";
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    // Reset des tampons
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if(mMaze == nullptr) return;
+
+    glPushMatrix();
+
+    // Déplacement de la caméra
+    updateView();
+
+    // Affichage du monde
+    displayWorld();
 
     glPopMatrix();
 }
