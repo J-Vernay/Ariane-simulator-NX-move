@@ -2,9 +2,9 @@
 #define GLSCENEWIDGET_HPP
 
 #include <QOpenGLWidget>
-#include "../models/maze.h"
-#include "../models/cell.h"
-#include "../player.hpp"
+#include "../gameobjects/maze.h"
+#include "../gameobjects/cell.h"
+#include "../gameobjects/player.hpp"
 
 /**
  * @brief Classe d'affichage de la scene 3D OpenGL

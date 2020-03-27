@@ -3,8 +3,8 @@
 
 #include "widgets/glscenewidget.hpp"
 #include "widgets/mazemapwidget.hpp"
-#include "models/maze.h"
-#include "player.hpp"
+#include "gameobjects/maze.h"
+#include "gameobjects/player.hpp"
 
 /**
  * @brief Classe principale de la logique de jeu

@@ -26,17 +26,17 @@ else {
 
 SOURCES += main.cpp \
     src/gamelogic.cpp \
-    src/models/maze.cpp \
-    src/player.cpp \
+    src/gameobjects/maze.cpp \
+    src/gameobjects/player.cpp \
     src/widgets/gamewidget.cpp \
     src/widgets/glscenewidget.cpp \
     src/widgets/mazemapwidget.cpp
 
 HEADERS  += \
     src/gamelogic.hpp \
-    src/models/cell.h \
-    src/models/maze.h \
-    src/player.hpp \
+    src/gameobjects/cell.h \
+    src/gameobjects/maze.h \
+    src/gameobjects/player.hpp \
     src/widgets/gamewidget.hpp \
     src/widgets/glscenewidget.hpp \
     src/widgets/mazemapwidget.hpp

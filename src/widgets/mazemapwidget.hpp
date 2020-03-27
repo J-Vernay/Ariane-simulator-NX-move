@@ -6,8 +6,8 @@
 #include <QPropertyAnimation>
 #include <QTimer>
 
-#include "../models/maze.h"
-#include "../player.hpp"
+#include "../gameobjects/maze.h"
+#include "../gameobjects/player.hpp"
 
 /**
  * @brief Classe d'affichage de la minimap
