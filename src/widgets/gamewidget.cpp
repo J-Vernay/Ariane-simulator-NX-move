@@ -10,7 +10,8 @@ const double MINIMAP_SCALE = 0.2;
 
 
 GameWidget::GameWidget(QWidget *parent) :
-    QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget), mGameLogic(&mSceneWidget, &mMapWidget)
+    QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget), mTimerWidget(&mSceneWidget),
+    mGameLogic(&mSceneWidget, &mMapWidget, &mTimerWidget)
 {
     resize(WIN_WIDTH, WIN_HEIGHT);
 
@@ -33,6 +34,9 @@ GameWidget::GameWidget(QWidget *parent) :
 void GameWidget::resizeEvent(QResizeEvent *event)
 {
     mMapWidget.setGeometry(0, 0, width() * MINIMAP_SCALE, height() * MINIMAP_SCALE);
+
+    int timerposx = (mSceneWidget.width() - mTimerWidget.width()) / 2;
+    mTimerWidget.move(timerposx, 0);
 }
 
 void GameWidget::keyPressEvent(QKeyEvent *event)

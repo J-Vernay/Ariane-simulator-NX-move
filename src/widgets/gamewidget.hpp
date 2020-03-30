@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include "glscenewidget.hpp"
 #include "mazemapwidget.hpp"
+#include "timerwidget.hpp"
 #include "../gamelogic.hpp"
 
 /**
@@ -26,6 +27,7 @@ private:
     // Widgets contenus
     GLSceneWidget mSceneWidget;
     MazeMapWidget mMapWidget;
+    TimerWidget mTimerWidget;
 
     // Layout principal
     QVBoxLayout * mMainLayout;

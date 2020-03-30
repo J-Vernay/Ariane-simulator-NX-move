@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     src/gameobjects/player.cpp \
     src/widgets/gamewidget.cpp \
     src/widgets/glscenewidget.cpp \
-    src/widgets/mazemapwidget.cpp
+    src/widgets/mazemapwidget.cpp \
+    src/widgets/timerwidget.cpp
 
 HEADERS  += \
     src/gamelogic.hpp \
@@ -39,7 +40,8 @@ HEADERS  += \
     src/gameobjects/player.hpp \
     src/widgets/gamewidget.hpp \
     src/widgets/glscenewidget.hpp \
-    src/widgets/mazemapwidget.hpp
+    src/widgets/mazemapwidget.hpp \
+    src/widgets/timerwidget.hpp
 
 FORMS    +=
 
@@ -53,3 +55,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_videoio420 \
     -lopencv_features2d420 \
     -lopencv_calib3d420
+
+RESOURCES += \
+    res/resources.qrc

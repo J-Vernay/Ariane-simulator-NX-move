@@ -5,6 +5,19 @@
 const int MAZE_WIDTH = 10;
 const int MAZE_HEIGHT = 8;
 
+GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget)
+    : mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
+      mMaze(MAZE_WIDTH, MAZE_HEIGHT)
+{
+    mMaze.generate();
+
+    mPlayer.setPosition(0.5, 0.5);
+    mMapWidget->setPlayer(&mPlayer);
+    mMapWidget->setMaze(&mMaze);
+    mSceneWidget->setMaze(&mMaze);
+    mSceneWidget->setPlayer(&mPlayer);
+}
+
 void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, double newY)
 {
     // Calcul des index des cases pré et post déplacement
@@ -56,18 +69,6 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     }
 }
 
-GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget)
-    : mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mMaze(MAZE_WIDTH, MAZE_HEIGHT)
-{
-    mMaze.generate();
-
-    mPlayer.setPosition(0.5, 0.5);
-    mMapWidget->setPlayer(&mPlayer);
-    mMapWidget->setMaze(&mMaze);
-    mSceneWidget->setMaze(&mMaze);
-    mSceneWidget->setPlayer(&mPlayer);
-}
-
 void GameLogic::movePlayer(GameLogic::Direction direction)
 {
     double formerX = mPlayer.getPosX();
@@ -88,6 +89,8 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
             break;
         case Direction::RIGHT:
             mPlayer.turnRight();
+            break;
+        default:
             break;
     }
     mMapWidget->update();
