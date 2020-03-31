@@ -5,8 +5,10 @@
 const int MAZE_WIDTH = 10;
 const int MAZE_HEIGHT = 8;
 
-GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget)
-    : mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
+const int FPS = 30;
+
+GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent)
+    : QObject(parent), mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
       mMaze(MAZE_WIDTH, MAZE_HEIGHT)
 {
     mMaze.generate();
@@ -20,6 +22,11 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
     mSceneWidget->setMaze(&mMaze);
     mSceneWidget->setPlayer(&mPlayer);
     mSceneWidget->setGameItems(&mItems);
+
+    mFrameTimer.setInterval(1000/FPS);
+    mFrameTimer.setSingleShot(false);
+    connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(updateFrame()));
+    mFrameTimer.start();
 }
 
 GameLogic::~GameLogic()
@@ -81,6 +88,11 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     }
 }
 
+void GameLogic::updateFrame()
+{
+    mSceneWidget->update();
+}
+
 void GameLogic::movePlayer(GameLogic::Direction direction)
 {
     double formerX = mPlayer.getPosX();
@@ -106,7 +118,6 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
             break;
     }
     mMapWidget->update();
-    mSceneWidget->update();
 
     if (direction == Direction::STOP)
     {

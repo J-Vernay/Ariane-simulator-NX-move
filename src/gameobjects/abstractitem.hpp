@@ -3,12 +3,14 @@
 
 #include <GL/glu.h>
 #include <memory>
+#include <QElapsedTimer>
 
 
 class AbstractItem
 {
     double mPosx, mPosy;
     double mRadius;
+    QElapsedTimer mElapsedTimer;
 
     std::unique_ptr<GLUquadric, void(*)(GLUquadric *)> mQuadric;
 
