@@ -26,6 +26,7 @@ else {
 
 SOURCES += main.cpp \
     src/gamelogic.cpp \
+    src/gameobjects/abstractitem.cpp \
     src/gameobjects/maze.cpp \
     src/gameobjects/player.cpp \
     src/widgets/gamewidget.cpp \
@@ -35,6 +36,7 @@ SOURCES += main.cpp \
 
 HEADERS  += \
     src/gamelogic.hpp \
+    src/gameobjects/abstractitem.hpp \
     src/gameobjects/cell.h \
     src/gameobjects/maze.h \
     src/gameobjects/player.hpp \

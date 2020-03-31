@@ -5,6 +5,7 @@
 #include "../gameobjects/maze.h"
 #include "../gameobjects/cell.h"
 #include "../gameobjects/player.hpp"
+#include "../gameobjects/abstractitem.hpp"
 
 /**
  * @brief Classe d'affichage de la scene 3D OpenGL
@@ -16,6 +17,8 @@ class GLSceneWidget : public QOpenGLWidget
     Maze * mMaze;
     Player * mPlayer;
 
+    std::vector<AbstractItem *> * mGameItems;
+
 public:
     // Constructeur
     explicit GLSceneWidget(QWidget *parent = nullptr);
@@ -25,6 +28,9 @@ public:
 
     // Association avec le joueur
     void setPlayer(Player * player) { mPlayer = player; };
+
+    // Association avec la collection d'items
+    void setGameItems(std::vector<AbstractItem *> * gameItems) { mGameItems = gameItems; };
 
 protected:
 

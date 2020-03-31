@@ -6,6 +6,7 @@
 #include "widgets/timerwidget.hpp"
 #include "gameobjects/maze.h"
 #include "gameobjects/player.hpp"
+#include "gameobjects/abstractitem.hpp"
 
 /**
  * @brief Classe principale de la logique de jeu
@@ -19,8 +20,11 @@ class GameLogic
     Maze mMaze;
     Player mPlayer;
 
+    std::vector<AbstractItem *> mItems;
+
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget);
+    ~GameLogic();
 
     // Fonction de déplacement du joueur, dans une direction définie par l'enum Direction.
     enum Direction{FORWARD, BACKWARD, LEFT, RIGHT, STOP};

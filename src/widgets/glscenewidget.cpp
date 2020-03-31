@@ -147,5 +147,11 @@ void GLSceneWidget::paintGL()
     // Affichage du monde
     displayWorld();
 
+    // Affichage des items
+    for (AbstractItem * item : *mGameItems)
+    {
+        item->displayGL(X_STEP, Y_STEP, WALL_HEIGHT);
+    }
+
     glPopMatrix();
 }

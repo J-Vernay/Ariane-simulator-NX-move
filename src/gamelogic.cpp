@@ -12,10 +12,22 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
     mMaze.generate();
 
     mPlayer.setPosition(0.5, 0.5);
+
+    mItems.push_back(new AbstractItem(1.5, 0.5));
+
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
     mSceneWidget->setMaze(&mMaze);
     mSceneWidget->setPlayer(&mPlayer);
+    mSceneWidget->setGameItems(&mItems);
+}
+
+GameLogic::~GameLogic()
+{
+    for (AbstractItem * item : mItems)
+    {
+        delete item;
+    }
 }
 
 void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, double newY)
