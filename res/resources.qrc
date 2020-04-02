@@ -2,4 +2,7 @@
     <qresource prefix="/res/fonts">
         <file>digital-7.ttf</file>
     </qresource>
+    <qresource prefix="/res/textures">
+        <file alias="logoTSE.png">textures/logoTSE.png</file>
+    </qresource>
 </RCC>

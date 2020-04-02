@@ -15,7 +15,7 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
 
     mPlayer.setPosition(0.5, 0.5);
 
-    mItems.push_back(new AbstractItem(1.5, 0.5));
+    mItems.push_back(new GoalItem(1.5, 0.5));
 
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);

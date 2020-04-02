@@ -6,7 +6,7 @@
 #include "widgets/timerwidget.hpp"
 #include "gameobjects/maze.h"
 #include "gameobjects/player.hpp"
-#include "gameobjects/abstractitem.hpp"
+#include "gameobjects/goalitem.hpp"
 
 #include <QTimer>
 

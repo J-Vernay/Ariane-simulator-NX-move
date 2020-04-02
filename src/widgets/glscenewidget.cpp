@@ -100,6 +100,9 @@ void GLSceneWidget::displayWorld()
 
 void GLSceneWidget::initializeGL()
 {
+    // Activation des textures
+    glEnable(GL_TEXTURE_2D);
+
     // Reglage de la couleur de fond
     glColor3ub(0,0,0);
 
@@ -112,6 +115,10 @@ void GLSceneWidget::initializeGL()
     GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
     glLightfv(GL_LIGHT0, GL_AMBIENT, white);
 
+    for (AbstractItem * item : *mGameItems)
+    {
+        item->initGL();
+    }
 }
 
 void GLSceneWidget::resizeGL(int width, int height)
