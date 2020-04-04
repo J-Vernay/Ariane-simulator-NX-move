@@ -45,7 +45,7 @@ void GLSceneWidget::displayWorld()
 
             if(cell.isFrontier(Cell::E))
             {
-                glNormal3d(-1.0, 0.0, 0.0);
+                glNormal3d(-X_STEP, 0.0, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
@@ -53,7 +53,7 @@ void GLSceneWidget::displayWorld()
             }
             if(cell.isFrontier(Cell::W))
             {
-                glNormal3d(1.0, 0.0, 0.0);
+                glNormal3d(X_STEP, 0.0, 0.0);
                 glVertex3d(x * X_STEP, y * Y_STEP, 0.0);
                 glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, 0.0);
                 glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
@@ -61,7 +61,7 @@ void GLSceneWidget::displayWorld()
             }
             if(cell.isFrontier(Cell::N))
             {
-                glNormal3d(0.0, 1.0, 0.0);
+                glNormal3d(0.0, Y_STEP, 0.0);
                 glVertex3d(x * X_STEP, y * Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, WALL_HEIGHT);
@@ -69,7 +69,7 @@ void GLSceneWidget::displayWorld()
             }
             if(cell.isFrontier(Cell::S))
             {
-                glNormal3d(0.0, -1.0, 0.0);
+                glNormal3d(0.0, -Y_STEP, 0.0);
                 glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, 0.0);
                 glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
@@ -79,16 +79,18 @@ void GLSceneWidget::displayWorld()
         }
     }
 
-    // Dessin du sol
-    GLfloat darkgray[] = {0.2, 0.2, 0.2, 1.0};
-    glMaterialfv(GL_FRONT, GL_AMBIENT, darkgray);
+    // Dessin du sol (même en dehors du labyrinthe)
+    GLfloat darkgreen[] = {0.2, 0.4, 0.2, 1.0};
+    glMaterialfv(GL_FRONT, GL_AMBIENT, darkgreen);
     glNormal3d(0.0, 0.0, 1.0);
-    glVertex3d(0.0, 0.0, 0.0);
-    glVertex3d(mMaze->getWidth() * X_STEP, 0.0, 0.0);
-    glVertex3d(mMaze->getWidth() * X_STEP, mMaze->getHeight() * Y_STEP, 0.0);
-    glVertex3d(0.0, mMaze->getHeight() * Y_STEP, 0.0);
+    glVertex3d(-10 * X_STEP, -10 * Y_STEP, 0.0);
+    glVertex3d((10 + mMaze->getWidth()) * X_STEP, -10 * Y_STEP, 0.0);
+    glVertex3d((10 + mMaze->getWidth()) * X_STEP, (10 + mMaze->getHeight()) * Y_STEP, 0.0);
+    glVertex3d(-10 * X_STEP, (10 + mMaze->getHeight()) * Y_STEP, 0.0);
 
     // Dessin du plafond, en gardant le materiau du sol
+    GLfloat darkgray[] = {0.2, 0.2, 0.2, 1.0};
+    glMaterialfv(GL_FRONT, GL_AMBIENT, darkgray);
     glNormal3d(0.0, 0.0, -1.0);
     glVertex3d(0.0, 0.0, WALL_HEIGHT);
     glVertex3d(mMaze->getWidth() * X_STEP, 0.0, WALL_HEIGHT);
@@ -103,8 +105,8 @@ void GLSceneWidget::initializeGL()
     // Activation des textures
     glEnable(GL_TEXTURE_2D);
 
-    // Reglage de la couleur de fond
-    glColor3ub(0,0,0);
+    // Reglage de la couleur de fond (bleu ciel)
+    glClearColor(0.53,0.81,0.92, 1.0);
 
     // Activation du z-buffer
     glEnable(GL_DEPTH_TEST);

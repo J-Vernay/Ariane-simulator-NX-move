@@ -15,7 +15,7 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
 
     mPlayer.setPosition(0.5, 0.5);
 
-    mItems.push_back(new GoalItem(1.5, 0.5));
+    mItems.push_back(new GoalItem(&mMaze, mMapWidget, 1.5, 0.5));
 
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
@@ -88,6 +88,31 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     }
 }
 
+void GameLogic::handleItemCollisions(double playerx, double playery)
+{
+    double xMin, xMax, yMin, yMax;
+
+    for (auto iterItem = mItems.begin(); iterItem < mItems.end();)
+    {
+        AbstractItem * item = *iterItem;
+        xMin = item->getPosX() - item->getRadius();
+        xMax = item->getPosX() + item->getRadius();
+        yMin = item->getPosY() - item->getRadius();
+        yMax = item->getPosY() + item->getRadius();
+
+        // Cas de collision
+        if (playerx > xMin && playerx < xMax && playery > yMin && playery < yMax)
+        {
+            item->onCollision();
+            iterItem = mItems.erase(iterItem);
+        }
+        else
+        {
+            ++iterItem;
+        }
+    }
+}
+
 void GameLogic::updateFrame()
 {
     mSceneWidget->update();
@@ -103,10 +128,12 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
         case Direction::FORWARD:
             mPlayer.goForward();
             handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
+            handleItemCollisions(mPlayer.getPosX(), mPlayer.getPosY());
             break;
         case Direction::BACKWARD:
             mPlayer.goBackward();
             handleWallCollisions(formerX, formerY, mPlayer.getPosX(), mPlayer.getPosY());
+            handleItemCollisions(mPlayer.getPosX(), mPlayer.getPosY());
             break;
         case Direction::LEFT:
             mPlayer.turnLeft();

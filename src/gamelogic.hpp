@@ -6,6 +6,7 @@
 #include "widgets/timerwidget.hpp"
 #include "gameobjects/maze.h"
 #include "gameobjects/player.hpp"
+#include "gameobjects/abstractitem.hpp"
 #include "gameobjects/goalitem.hpp"
 
 #include <QTimer>
@@ -40,6 +41,9 @@ private:
     // Appeler après un déplacement logique. Cette méthode va corriger le déplacement du
     //      joueur ssi ce dernier est entré en collision avec un mur
     void handleWallCollisions(double oldX, double oldY, double newX, double newY);
+
+    // Vérifie les collisions avec un éventuel item, et appelle la méthode correspondante le cas échéant
+    void handleItemCollisions(double playerx, double playery);
 
 private slots:
     void updateFrame();
