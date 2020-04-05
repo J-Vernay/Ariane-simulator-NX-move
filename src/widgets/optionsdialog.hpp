@@ -3,6 +3,9 @@
 
 #include "ui_optionsdialog.h"
 
+/**
+ * @brief Boite de dialogue pour la modification des options
+ */
 class OptionsDialog : public QDialog
 {
     Q_OBJECT

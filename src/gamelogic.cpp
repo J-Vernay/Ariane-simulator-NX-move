@@ -211,6 +211,8 @@ void GameLogic::restart()
 
 void GameLogic::changeOptions()
 {
+    mTimerWidget->pause();
+
     OptionsDialog dialog(mMaze.getWidth(), mMaze.getHeight());
     int dialogResponse = dialog.exec();
 
@@ -218,5 +220,9 @@ void GameLogic::changeOptions()
     {
         mMaze.resize(dialog.getMazeWidth(), dialog.getMazeHeight());
         restart();
+    }
+    else
+    {
+        mTimerWidget->resume();
     }
 }

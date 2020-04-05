@@ -20,11 +20,16 @@ class TimerWidget : public QWidget
 
     QElapsedTimer mElapsedTime;
 
+    QElapsedTimer mPauseTimer;
+    int mPauseTimeMs;
+
 public:
     explicit TimerWidget(QWidget *parent = nullptr);
 
     QTime stop();
     void restart();
+    void pause();
+    void resume();
 
 
 private slots:

@@ -7,7 +7,7 @@
 const unsigned int TIMER_REFRESH_PER_SECOND = 20;
 
 TimerWidget::TimerWidget(QWidget *parent)
-    : QWidget(parent), mTimerLabel(this), mTimer(this)
+    : QWidget(parent), mTimerLabel(this), mTimer(this), mPauseTimeMs(0)
 {
     // Ajout du label dans le widget
     this->setLayout(new QVBoxLayout(this));
@@ -40,19 +40,32 @@ TimerWidget::TimerWidget(QWidget *parent)
 QTime TimerWidget::stop()
 {
     mTimer.stop();
-    return QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());
+    return QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed() - mPauseTimeMs);
 }
 
 void TimerWidget::restart()
 {
     mElapsedTime.restart();
+    mPauseTimeMs = 0;
 
+    mTimer.start();
+}
+
+void TimerWidget::pause()
+{
+    mPauseTimer.restart();
+    mTimer.stop();
+}
+
+void TimerWidget::resume()
+{
+    mPauseTimeMs += mPauseTimer.elapsed();
     mTimer.start();
 }
 
 void TimerWidget::refreshTimerDisplay()
 {
-    QTime elapsed = QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());
+    QTime elapsed = QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed() - mPauseTimeMs);
     QString labelText = QString("%1:%2:%3")
             .arg(elapsed.minute(), 2, 10, QChar('0'))
             .arg(elapsed.second(), 2, 10, QChar('0'))

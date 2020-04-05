@@ -5,6 +5,8 @@ OptionsDialog::OptionsDialog(int currMazeWidth, int currMazeHeight,QWidget *pare
 {
     ui.setupUi(this);
 
+    this->setFixedSize(this->size());
+
     ui.widthValue->setValue(currMazeWidth);
     ui.heightValue->setValue(currMazeHeight);
 }
