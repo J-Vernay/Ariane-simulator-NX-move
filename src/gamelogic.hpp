@@ -10,6 +10,7 @@
 #include "gameobjects/goalitem.hpp"
 
 #include <QTimer>
+#include <QTime>
 
 /**
  * @brief Classe principale de la logique de jeu
@@ -44,6 +45,8 @@ private:
 
     // Vérifie les collisions avec un éventuel item, et appelle la méthode correspondante le cas échéant
     void handleItemCollisions(double playerx, double playery);
+
+    void win();
 
 private slots:
     void updateFrame();

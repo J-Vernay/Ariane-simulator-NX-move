@@ -1,6 +1,7 @@
 #include "gamelogic.hpp"
 
 #include <QDebug>
+#include <QMessageBox>
 
 const int MAZE_WIDTH = 10;
 const int MAZE_HEIGHT = 8;
@@ -15,7 +16,9 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
 
     mPlayer.setPosition(0.5, 0.5);
 
-    mItems.push_back(new GoalItem(&mMaze, mMapWidget, 1.5, 0.5));
+    int goalXIdx = rand() % mMaze.getWidth();
+    int goalYIdx = rand() % mMaze.getHeight();
+    mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
 
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
@@ -45,20 +48,39 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     int newXi = std::floor(newX);
     int newYi = std::floor(newY);
 
+    // Booléen vrai si la nouvelle position est en dehors du labyrinthe
+    bool oobNewPos = (newXi < 0 || newYi < 0 || newXi > MAZE_WIDTH - 1 || newYi > MAZE_HEIGHT - 1);
+
+    // Si on est sorti des limites, on vérifie qu'il n'y a pas de mur (le cas échéant, il s'agit de la sortie)
+    if (oobNewPos)
+    {
+        Cell& oldCell = mMaze.getCell(oldXi, oldYi);
+        int diffx = newXi - oldXi;
+        int diffy = newYi - oldYi;
+        int direction = abs(diffx * (1 - diffx) + diffy * (2 + diffy));   //Trust me
+
+        // Si on ne va pas en diagonale, et s'il n'y a pas de mur
+        if ((diffx != 0 || diffy != 0) && !oldCell.isFrontier(Cell::Direction(direction)))
+        {
+            // On gagne le jeu
+            win();
+            return;
+        }
+        mPlayer.setPosition(oldX, oldY);
+        return;
+    }
+
     // Booléens de collision
     bool collisionE = (newXi > oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::E));
     bool collisionW = (newXi < oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::W));
     bool collisionN = (newYi < oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::N));
     bool collisionS = (newYi > oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::S));
 
-    // Booléen vrai si la nouvelle position est en dehors du labyrinthe
-    bool oobNewPos = (newXi < 0 || newYi < 0 || newXi > MAZE_WIDTH - 1 || newYi > MAZE_HEIGHT - 1);
-
     // Booléens de collisions "inversés" (calculés à partir de la nouvelle position)
-    bool rCollisionE = (!oobNewPos && oldXi < newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::W));
-    bool rCollisionW = (!oobNewPos && oldXi > newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::E));
-    bool rCollisionN = (!oobNewPos && newYi >= 0 && oldYi > newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::S));
-    bool rCollisionS = (!oobNewPos && mMaze.getCell(newXi, newYi).isFrontier(Cell::N));
+    bool rCollisionE = (oldXi < newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::W));
+    bool rCollisionW = (oldXi > newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::E));
+    bool rCollisionN = (newYi >= 0 && oldYi > newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::S));
+    bool rCollisionS = (mMaze.getCell(newXi, newYi).isFrontier(Cell::N));
 
     // Collision dans un angle, à l'intérieur
     if ((collisionE || collisionW) && (collisionN || collisionS))
@@ -111,6 +133,16 @@ void GameLogic::handleItemCollisions(double playerx, double playery)
             ++iterItem;
         }
     }
+}
+
+void GameLogic::win()
+{
+    QTime time = mTimerWidget->stop();
+    QString finishMessage = QString("Vous êtes sortis du labyrinthe en %1:%2:%3")
+            .arg(time.minute(), 2, 10, QChar('0'))
+            .arg(time.second(), 2, 10, QChar('0'))
+            .arg(time.msec(), 3, 10, QChar('0'));
+    QMessageBox::information(nullptr, QString("Bravo !"), finishMessage);
 }
 
 void GameLogic::updateFrame()

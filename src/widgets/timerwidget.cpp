@@ -37,6 +37,12 @@ TimerWidget::TimerWidget(QWidget *parent)
     mTimerLabel.setText("00:00:000");
 }
 
+QTime TimerWidget::stop()
+{
+    mTimer.stop();
+    return QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());
+}
+
 void TimerWidget::refreshTimerDisplay()
 {
     QTime elapsed = QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());

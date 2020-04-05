@@ -23,6 +23,8 @@ class TimerWidget : public QWidget
 public:
     explicit TimerWidget(QWidget *parent = nullptr);
 
+    QTime stop();
+
 
 private slots:
     void refreshTimerDisplay();
