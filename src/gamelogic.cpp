@@ -205,4 +205,18 @@ void GameLogic::restart()
     mFrameTimer.start();
 
     mTimerWidget->restart();
+
+    mMapWidget->show();
+}
+
+void GameLogic::changeOptions()
+{
+    OptionsDialog dialog(mMaze.getWidth(), mMaze.getHeight());
+    int dialogResponse = dialog.exec();
+
+    if (dialogResponse == QDialog::Accepted)
+    {
+        mMaze.resize(dialog.getMazeWidth(), dialog.getMazeHeight());
+        restart();
+    }
 }

@@ -41,7 +41,6 @@ private:
 
 private slots:
     void quit();
-    void showOptions();
 
 };
 

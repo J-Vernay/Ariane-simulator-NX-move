@@ -33,6 +33,7 @@ SOURCES += main.cpp \
     src/widgets/gamewidget.cpp \
     src/widgets/glscenewidget.cpp \
     src/widgets/mazemapwidget.cpp \
+    src/widgets/optionsdialog.cpp \
     src/widgets/timerwidget.cpp
 
 HEADERS  += \
@@ -45,9 +46,11 @@ HEADERS  += \
     src/widgets/gamewidget.hpp \
     src/widgets/glscenewidget.hpp \
     src/widgets/mazemapwidget.hpp \
+    src/widgets/optionsdialog.hpp \
     src/widgets/timerwidget.hpp
 
-FORMS    +=
+FORMS    += \
+    src/widgets/optionsdialog.ui
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 

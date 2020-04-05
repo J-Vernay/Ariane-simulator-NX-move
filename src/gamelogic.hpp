@@ -4,6 +4,7 @@
 #include "widgets/glscenewidget.hpp"
 #include "widgets/mazemapwidget.hpp"
 #include "widgets/timerwidget.hpp"
+#include "widgets/optionsdialog.hpp"
 #include "gameobjects/maze.h"
 #include "gameobjects/player.hpp"
 #include "gameobjects/abstractitem.hpp"
@@ -51,6 +52,9 @@ private:
 private slots:
     void updateFrame();
     void restart();
+
+public slots:
+    void changeOptions();
 };
 
 #endif // GAMELOGIC_HPP

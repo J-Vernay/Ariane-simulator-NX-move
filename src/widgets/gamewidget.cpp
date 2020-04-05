@@ -16,10 +16,11 @@ GameWidget::GameWidget(QWidget *parent) :
     resize(WIN_WIDTH, WIN_HEIGHT);
 
     mMainLayout = new QVBoxLayout(this);
+    this->setLayout(mMainLayout);
     mMainLayout->addWidget(&mSceneWidget, 1);
 
     mButtonsWidget = new QWidget(this);
-    mButtonsLayout = new QHBoxLayout(this);
+    mButtonsLayout = new QHBoxLayout(mButtonsWidget);
     mButtonsWidget->setLayout(mButtonsLayout);
     mMainLayout->addWidget(mButtonsWidget);
 
@@ -27,7 +28,7 @@ GameWidget::GameWidget(QWidget *parent) :
 
     QPushButton * optionsButton = new QPushButton("&Options", this);
     mButtonsLayout->addWidget(optionsButton);
-    connect(optionsButton, SIGNAL(pressed()), this, SLOT(showOptions()));
+    connect(optionsButton, SIGNAL(pressed()), &mGameLogic, SLOT(changeOptions()));
 
     QPushButton * restartButton = new QPushButton("&Recommencer", this);
     mButtonsLayout->addWidget(restartButton);
@@ -36,8 +37,6 @@ GameWidget::GameWidget(QWidget *parent) :
     QPushButton * exitButton = new QPushButton("&Quitter", this);
     mButtonsLayout->addWidget(exitButton);
     connect(exitButton, SIGNAL(pressed()), this, SLOT(quit()));
-
-    this->setLayout(mMainLayout);
 
     mSceneWidget.setFocusPolicy(Qt::StrongFocus);
 }
@@ -75,9 +74,4 @@ void GameWidget::keyPressEvent(QKeyEvent *event)
 void GameWidget::quit()
 {
     this->close();
-}
-
-void GameWidget::showOptions()
-{
-
 }
