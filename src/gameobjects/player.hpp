@@ -19,6 +19,9 @@ public:
     // Mutateur de la position brute
     void setPosition(double posx, double posy) { mPosX = posx; mPosY = posy; };
 
+    // Mutateur de l'angle brut
+    void setAngle(double angle) { mAngle = angle; };
+
     // Getters
     double getPosX() { return mPosX; };
     double getPosY() { return mPosY; };

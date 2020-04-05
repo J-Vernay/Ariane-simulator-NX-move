@@ -43,6 +43,13 @@ QTime TimerWidget::stop()
     return QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());
 }
 
+void TimerWidget::restart()
+{
+    mElapsedTime.restart();
+
+    mTimer.start();
+}
+
 void TimerWidget::refreshTimerDisplay()
 {
     QTime elapsed = QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed());

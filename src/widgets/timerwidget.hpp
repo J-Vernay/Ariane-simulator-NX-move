@@ -24,6 +24,7 @@ public:
     explicit TimerWidget(QWidget *parent = nullptr);
 
     QTime stop();
+    void restart();
 
 
 private slots:

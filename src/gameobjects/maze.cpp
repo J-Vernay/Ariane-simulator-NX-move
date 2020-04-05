@@ -23,6 +23,13 @@ void Maze::reinit()
     grid_=vector<vector<Cell>>(height_,vector<Cell>(width_));
 }
 
+void Maze::resize(int width, int height)
+{
+    width_ = width;
+    height_ = height;
+    reinit();
+}
+
 void Maze::addFrontier(Point p, list<Point> &frontier)
 {
     if (p.first>=0 && p.second>=0 && p.second<height_ && p.first<width_

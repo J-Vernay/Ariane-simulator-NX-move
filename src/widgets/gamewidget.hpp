@@ -32,8 +32,16 @@ private:
     // Layout principal
     QVBoxLayout * mMainLayout;
 
+    //Layout horizontal des boutons
+    QWidget * mButtonsWidget;
+    QHBoxLayout * mButtonsLayout;
+
     // Logique de jeu
     GameLogic mGameLogic;
+
+private slots:
+    void quit();
+    void showOptions();
 
 };
 

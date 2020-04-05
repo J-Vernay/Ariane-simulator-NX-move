@@ -16,15 +16,26 @@ GameWidget::GameWidget(QWidget *parent) :
     resize(WIN_WIDTH, WIN_HEIGHT);
 
     mMainLayout = new QVBoxLayout(this);
-    mMainLayout->addWidget(&mSceneWidget);
+    mMainLayout->addWidget(&mSceneWidget, 1);
 
-    QPushButton * hideButton = new QPushButton("HIDE", this);
-    mMainLayout->addWidget(hideButton);
-    connect(hideButton, SIGNAL(pressed()), &mMapWidget, SLOT(hide()));
+    mButtonsWidget = new QWidget(this);
+    mButtonsLayout = new QHBoxLayout(this);
+    mButtonsWidget->setLayout(mButtonsLayout);
+    mMainLayout->addWidget(mButtonsWidget);
 
-    QPushButton * showButton = new QPushButton("SHOW", this);
-    mMainLayout->addWidget(showButton);
-    connect(showButton, SIGNAL(pressed()), &mMapWidget, SLOT(show()));
+    mButtonsLayout->addStretch();
+
+    QPushButton * optionsButton = new QPushButton("&Options", this);
+    mButtonsLayout->addWidget(optionsButton);
+    connect(optionsButton, SIGNAL(pressed()), this, SLOT(showOptions()));
+
+    QPushButton * restartButton = new QPushButton("&Recommencer", this);
+    mButtonsLayout->addWidget(restartButton);
+    connect(restartButton, SIGNAL(pressed()), &mGameLogic, SLOT(restart()));
+
+    QPushButton * exitButton = new QPushButton("&Quitter", this);
+    mButtonsLayout->addWidget(exitButton);
+    connect(exitButton, SIGNAL(pressed()), this, SLOT(quit()));
 
     this->setLayout(mMainLayout);
 
@@ -59,4 +70,14 @@ void GameWidget::keyPressEvent(QKeyEvent *event)
             mGameLogic.movePlayer(GameLogic::Direction::STOP);
             break;
     }
+}
+
+void GameWidget::quit()
+{
+    this->close();
+}
+
+void GameWidget::showOptions()
+{
+
 }

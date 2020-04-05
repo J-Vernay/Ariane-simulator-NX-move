@@ -32,6 +32,7 @@ class Maze
 public:
     Maze(int width,int height);
     void reinit();
+    void resize(int width, int height);
     void display(bool pause=false);
     void generate(bool show=false);
 

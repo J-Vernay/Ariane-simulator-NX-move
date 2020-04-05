@@ -11,15 +11,7 @@ const int FPS = 30;
 GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent)
     : QObject(parent), mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
       mMaze(MAZE_WIDTH, MAZE_HEIGHT)
-{
-    mMaze.generate();
-
-    mPlayer.setPosition(0.5, 0.5);
-
-    int goalXIdx = rand() % mMaze.getWidth();
-    int goalYIdx = rand() % mMaze.getHeight();
-    mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
-
+{ 
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
     mSceneWidget->setMaze(&mMaze);
@@ -29,7 +21,8 @@ GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapW
     mFrameTimer.setInterval(1000/FPS);
     mFrameTimer.setSingleShot(false);
     connect(&mFrameTimer, SIGNAL(timeout()), this, SLOT(updateFrame()));
-    mFrameTimer.start();
+
+    restart();
 }
 
 GameLogic::~GameLogic()
@@ -137,6 +130,8 @@ void GameLogic::handleItemCollisions(double playerx, double playery)
 
 void GameLogic::win()
 {
+    mFrameTimer.stop();
+
     QTime time = mTimerWidget->stop();
     QString finishMessage = QString("Vous êtes sortis du labyrinthe en %1:%2:%3")
             .arg(time.minute(), 2, 10, QChar('0'))
@@ -186,4 +181,28 @@ void GameLogic::movePlayer(GameLogic::Direction direction)
     {
         mMapWidget->hide();
     }
+}
+
+void GameLogic::restart()
+{
+    mMaze.reinit();
+    mMaze.generate();
+
+    mPlayer.setPosition(0.5, 0.5);
+    mPlayer.setAngle(0.0);
+
+    mItems.clear();
+
+    int goalXIdx = rand() % mMaze.getWidth();
+    int goalYIdx = rand() % mMaze.getHeight();
+    mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
+
+    for (AbstractItem * item : mItems)
+    {
+        item->initGL();
+    }
+
+    mFrameTimer.start();
+
+    mTimerWidget->restart();
 }

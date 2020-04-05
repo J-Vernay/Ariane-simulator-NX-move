@@ -15,7 +15,7 @@
 /**
  * @brief Classe principale de la logique de jeu
  */
-class GameLogic : QObject
+class GameLogic : public QObject
 {
     Q_OBJECT
 
@@ -50,6 +50,7 @@ private:
 
 private slots:
     void updateFrame();
+    void restart();
 };
 
 #endif // GAMELOGIC_HPP
