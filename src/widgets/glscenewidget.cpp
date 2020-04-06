@@ -7,6 +7,8 @@
 
 const GLdouble X_STEP = 10;
 const GLdouble Y_STEP = -X_STEP;
+const GLdouble X_DIR = X_STEP / std::abs(X_STEP);
+const GLdouble Y_DIR = Y_STEP / std::abs(Y_STEP);
 const GLdouble WALL_HEIGHT = 5;
 
 GLSceneWidget::GLSceneWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -24,6 +26,9 @@ void GLSceneWidget::updateView()
     double centerx = xpos + std::cos(mPlayer->getAngle());
     double centery = ypos - std::sin(mPlayer->getAngle());
 
+    float lightPosition[] = {(float)xpos, (float)ypos, 0.5, 1.0};
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
     gluLookAt(xpos, ypos, WALL_HEIGHT / 2.0,
               centerx, centery, WALL_HEIGHT / 2.0,
               0.0, 0.0, 1.0);
@@ -31,8 +36,10 @@ void GLSceneWidget::updateView()
 
 void GLSceneWidget::displayWorld()
 {
-    GLfloat gray[] = { 0.5, 0.5, 0.5, 1.0 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, gray);
+    GLfloat ambientColor[] = { 0.5, 0.5, 0.5, 1.0 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor);
+    GLfloat diffuseAddition[] = { 0.3, 0.3, 0.3, 1.0 };
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseAddition);
 
     glBegin(GL_QUADS);
 
@@ -50,14 +57,14 @@ void GLSceneWidget::displayWorld()
             if(cell.isFrontier(Cell::E))
             {
                 // Longueur du mur
-                glNormal3d(-X_STEP, 0.0, 0.0);
+                glNormal3d(-X_DIR, 0.0, 0.0);
                 glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
                 glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
 
                 // Epaisseur du mur
-                glNormal3d(0.0, -Y_STEP, 0.0);
+                glNormal3d(0.0, -Y_DIR, 0.0);
                 glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
@@ -66,14 +73,14 @@ void GLSceneWidget::displayWorld()
             if(cell.isFrontier(Cell::W))
             {
                 // Longueur du mur
-                glNormal3d(X_STEP, 0.0, 0.0);
+                glNormal3d(X_DIR, 0.0, 0.0);
                 glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
                 glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
 
                 // Epaisseur du mur
-                glNormal3d(0.0, Y_STEP, 0.0);
+                glNormal3d(0.0, Y_DIR, 0.0);
                 glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
@@ -82,14 +89,14 @@ void GLSceneWidget::displayWorld()
             if(cell.isFrontier(Cell::N))
             {
                 // Longueur du mur
-                glNormal3d(0.0, Y_STEP, 0.0);
+                glNormal3d(0.0, Y_DIR, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + wallWidthY, WALL_HEIGHT);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, WALL_HEIGHT);
 
                 // Epaisseur du mur
-                glNormal3d(-X_STEP, 0.0, 0.0);
+                glNormal3d(-X_DIR, 0.0, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
@@ -98,14 +105,14 @@ void GLSceneWidget::displayWorld()
             if(cell.isFrontier(Cell::S))
             {
                 // Longueur du mur
-                glNormal3d(0.0, -Y_STEP, 0.0);
+                glNormal3d(0.0, -Y_DIR, 0.0);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, WALL_HEIGHT);
                 glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, WALL_HEIGHT);
 
                 // Epaisseur du mur
-                glNormal3d(X_STEP, 0.0, 0.0);
+                glNormal3d(X_DIR, 0.0, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
                 glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
@@ -150,8 +157,11 @@ void GLSceneWidget::initializeGL()
     // Règlage de la lumière ambiante
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    GLfloat black[] = {0.0, 0.0, 0.0, 1.0};
     GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
     glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, black);
 
     for (AbstractItem * item : *mGameItems)
     {
