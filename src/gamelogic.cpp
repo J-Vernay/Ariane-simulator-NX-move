@@ -8,6 +8,8 @@ const int DEFAULT_MAZE_HEIGHT = 8;
 
 const int FPS = 30;
 
+const double COLLISION_MARGIN = 0.1;
+
 GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent)
     : QObject(parent), mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
       mMaze(DEFAULT_MAZE_WIDTH, DEFAULT_MAZE_HEIGHT)
@@ -66,43 +68,47 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
         return;
     }
 
-    // Booléens de collision
-    bool collisionE = (std::floor(newX + hitbox) > oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::E));
-    bool collisionW = (std::floor(newX - hitbox) < oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::W));
-    bool collisionN = (std::floor(newY - hitbox) < oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::N));
-    bool collisionS = (std::floor(newY + hitbox) > oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::S));
+    // Parties décimales de la nouvelle position (ex : 3.4 => 0.4)
+    double newXd = newX - newXi;
+    double newYd = newY - newYi;
 
-    // Booléens de collisions "inversés" (calculés à partir de la nouvelle position)
-    bool rCollisionE = (std::floor(oldX - hitbox) < newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::W));
-    bool rCollisionW = (std::floor(oldX + hitbox) > newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::E));
-    bool rCollisionN = (newYi >= 0 && std::floor(oldY + hitbox) > newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::S));
-    bool rCollisionS = (std::floor(oldY - hitbox) < newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::N));
+    // Nouvelle position relative à l'indice de l'ancienne case
+    double newXr = newX - oldXi;
+    double newYr = newY - oldYi;
 
-    // Collision dans un angle, à l'intérieur
-    if ((collisionE || collisionW) && (collisionN || collisionS))
+    // Collisions "classiques" avec un mur
+    //   Note : on modifie directement newX et newY. Pour vérifier si newX ou newY a changé,
+    //   on peut utiliser respectivement newXr + oldXi et newYr + oldYi, qui sont les anciennes
+    //   valeurs de newX et newY
+    Cell& oldCell = mMaze.getCell(oldXi, oldYi);
+    if (oldCell.isFrontier(Cell::N))
+    {
+        newY = std::max(hitbox + COLLISION_MARGIN, newYr) + oldYi;
+    }
+    if (oldCell.isFrontier(Cell::S) && newY == (newYr + oldYi))
+    {
+        newY = std::min(1 - hitbox - COLLISION_MARGIN, newYr) + oldYi;
+    }
+    if (oldCell.isFrontier(Cell::W))
+    {
+        newX = std::max(hitbox + COLLISION_MARGIN, newXr) + oldXi;
+    }
+    if (oldCell.isFrontier(Cell::E) && newX == (newXr + oldXi))
+    {
+        newX = std::min(1 - hitbox - COLLISION_MARGIN, newXr) + oldXi;
+    }
+    mPlayer.setPosition(newX, newY);
+
+    // On interdit de se retrouver dans un mur
+    Cell& newCell = mMaze.getCell(newXi, newYi);
+    if (newX == (newXr + oldXi) && newY == (newYr + oldYi) &&
+               ((newCell.isFrontier(Cell::N) && newYd <= hitbox)
+            || (newCell.isFrontier(Cell::S) && newYd >= (1 - hitbox))
+            || (newCell.isFrontier(Cell::W) && newXd <= hitbox)
+            || (newCell.isFrontier(Cell::E) && newXd >= (1 - hitbox))))
     {
         mPlayer.setPosition(oldX, oldY);
         return;
-    }
-
-    // Collision latérale
-    if (collisionE || collisionW)
-    {
-        mPlayer.setPosition(oldX, newY);
-        return;
-    }
-
-    // Collision verticale
-    if (collisionN || collisionS)
-    {
-        mPlayer.setPosition(newX, oldY);
-        return;
-    }
-
-    // Collision dans un angle, à l'extérieur
-    if ((rCollisionE || rCollisionW) && (rCollisionN || rCollisionS))
-    {
-        mPlayer.setPosition(oldX, oldY);
     }
 }
 
@@ -141,6 +147,7 @@ void GameLogic::win()
             .arg(time.second(), 2, 10, QChar('0'))
             .arg(time.msec(), 3, 10, QChar('0'));
     QMessageBox::information(nullptr, QString("Bravo !"), finishMessage);
+    restart();
 }
 
 void GameLogic::updateFrame()
