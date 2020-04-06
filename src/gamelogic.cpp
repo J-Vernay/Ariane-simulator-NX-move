@@ -3,14 +3,14 @@
 #include <QDebug>
 #include <QMessageBox>
 
-const int MAZE_WIDTH = 10;
-const int MAZE_HEIGHT = 8;
+const int DEFAULT_MAZE_WIDTH = 10;
+const int DEFAULT_MAZE_HEIGHT = 8;
 
 const int FPS = 30;
 
 GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent)
     : QObject(parent), mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
-      mMaze(MAZE_WIDTH, MAZE_HEIGHT)
+      mMaze(DEFAULT_MAZE_WIDTH, DEFAULT_MAZE_HEIGHT)
 { 
     mMapWidget->setPlayer(&mPlayer);
     mMapWidget->setMaze(&mMaze);
@@ -42,7 +42,7 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     int newYi = std::floor(newY);
 
     // Booléen vrai si la nouvelle position est en dehors du labyrinthe
-    bool oobNewPos = (newXi < 0 || newYi < 0 || newXi > MAZE_WIDTH - 1 || newYi > MAZE_HEIGHT - 1);
+    bool oobNewPos = (newXi < 0 || newYi < 0 || newXi > mMaze.getWidth() - 1 || newYi > mMaze.getHeight() - 1);
 
     // Si on est sorti des limites, on vérifie qu'il n'y a pas de mur (le cas échéant, il s'agit de la sortie)
     if (oobNewPos)
