@@ -12,6 +12,7 @@ class Player
     double mAngle;                              // Orientation
     const double mWalkSpeed = 0.2;              // Vitesse de déplacement du joueur
     const double mRotateSpeed = M_PI / 30.0;    // Vitesse de rotation du joueur
+    const double mHitboxRadius = 0.1;           // Taille de la hitbox du joueur.
 
 public:
     Player(double posx = 0.5, double poxy = 0.5, double angle = 0.0);
@@ -26,6 +27,7 @@ public:
     double getPosX() { return mPosX; };
     double getPosY() { return mPosY; };
     double getAngle() { return mAngle; };
+    double getHitboxRadius() { return mHitboxRadius; };
 
     // Fonctions de déplacement
     void goForward();

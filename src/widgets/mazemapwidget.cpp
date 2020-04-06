@@ -32,7 +32,7 @@ void MazeMapWidget::paintEvent(QPaintEvent *event)
     const int BEGIN = MARGIN;
     const int Y_STEP = (height() - 2 * MARGIN) / mMaze->getHeight();
     const int X_STEP = (width() - 2 * MARGIN) / mMaze->getWidth();
-    const int PLAYER_RADIUS = 5;
+    const int PLAYER_RADIUS = mPlayer->getHitboxRadius() * std::min(X_STEP, Y_STEP);
 
     // Dessin du labyrinthe
     if (mMaze != nullptr)

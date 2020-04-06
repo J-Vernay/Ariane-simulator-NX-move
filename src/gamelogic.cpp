@@ -35,6 +35,9 @@ GameLogic::~GameLogic()
 
 void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, double newY)
 {
+    // Rayon de la hitbox
+    double hitbox = mPlayer.getHitboxRadius();
+
     // Calcul des index des cases pré et post déplacement
     int oldXi = std::floor(oldX);
     int oldYi = std::floor(oldY);
@@ -64,16 +67,16 @@ void GameLogic::handleWallCollisions(double oldX, double oldY, double newX, doub
     }
 
     // Booléens de collision
-    bool collisionE = (newXi > oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::E));
-    bool collisionW = (newXi < oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::W));
-    bool collisionN = (newYi < oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::N));
-    bool collisionS = (newYi > oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::S));
+    bool collisionE = (std::floor(newX + hitbox) > oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::E));
+    bool collisionW = (std::floor(newX - hitbox) < oldXi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::W));
+    bool collisionN = (std::floor(newY - hitbox) < oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::N));
+    bool collisionS = (std::floor(newY + hitbox) > oldYi && mMaze.getCell(oldXi, oldYi).isFrontier(Cell::S));
 
     // Booléens de collisions "inversés" (calculés à partir de la nouvelle position)
-    bool rCollisionE = (oldXi < newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::W));
-    bool rCollisionW = (oldXi > newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::E));
-    bool rCollisionN = (newYi >= 0 && oldYi > newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::S));
-    bool rCollisionS = (mMaze.getCell(newXi, newYi).isFrontier(Cell::N));
+    bool rCollisionE = (std::floor(oldX - hitbox) < newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::W));
+    bool rCollisionW = (std::floor(oldX + hitbox) > newXi && mMaze.getCell(newXi, newYi).isFrontier(Cell::E));
+    bool rCollisionN = (newYi >= 0 && std::floor(oldY + hitbox) > newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::S));
+    bool rCollisionS = (std::floor(oldY - hitbox) < newYi && mMaze.getCell(newXi, newYi).isFrontier(Cell::N));
 
     // Collision dans un angle, à l'intérieur
     if ((collisionE || collisionW) && (collisionN || collisionS))

@@ -36,6 +36,10 @@ void GLSceneWidget::displayWorld()
 
     glBegin(GL_QUADS);
 
+    // Définition de l'épaisseur des murs
+    double wallWidthX = mPlayer->getHitboxRadius() * X_STEP;
+    double wallWidthY = mPlayer->getHitboxRadius() * Y_STEP;
+
     // Dessin des murs
     for(int y = 0; y < mMaze->getHeight(); ++y)
     {
@@ -45,35 +49,67 @@ void GLSceneWidget::displayWorld()
 
             if(cell.isFrontier(Cell::E))
             {
+                // Longueur du mur
                 glNormal3d(-X_STEP, 0.0, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
+
+                // Epaisseur du mur
+                glNormal3d(0.0, -Y_STEP, 0.0);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + X_STEP - wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
             }
             if(cell.isFrontier(Cell::W))
             {
+                // Longueur du mur
                 glNormal3d(X_STEP, 0.0, 0.0);
-                glVertex3d(x * X_STEP, y * Y_STEP, 0.0);
-                glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, 0.0);
-                glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
-                glVertex3d(x * X_STEP, y * Y_STEP, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
+
+                // Epaisseur du mur
+                glNormal3d(0.0, Y_STEP, 0.0);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
             }
             if(cell.isFrontier(Cell::N))
             {
+                // Longueur du mur
                 glNormal3d(0.0, Y_STEP, 0.0);
-                glVertex3d(x * X_STEP, y * Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP, WALL_HEIGHT);
-                glVertex3d(x * X_STEP, y * Y_STEP, WALL_HEIGHT);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, WALL_HEIGHT);
+
+                // Epaisseur du mur
+                glNormal3d(-X_STEP, 0.0, 0.0);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP - wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + wallWidthY, WALL_HEIGHT);
             }
             if(cell.isFrontier(Cell::S))
             {
+                // Longueur du mur
                 glNormal3d(0.0, -Y_STEP, 0.0);
-                glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, 0.0);
-                glVertex3d(x * X_STEP + X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
-                glVertex3d(x * X_STEP, y * Y_STEP + Y_STEP, WALL_HEIGHT);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP - wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, WALL_HEIGHT);
+
+                // Epaisseur du mur
+                glNormal3d(X_STEP, 0.0, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, 0.0);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP + wallWidthY, WALL_HEIGHT);
+                glVertex3d(x * X_STEP + X_STEP + wallWidthX, y * Y_STEP + Y_STEP - wallWidthY, WALL_HEIGHT);
             }
 
         }
