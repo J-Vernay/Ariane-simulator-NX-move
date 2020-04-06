@@ -6,6 +6,7 @@
 #include <mutex>
 #include <atomic>
 #include <tuple>
+#include <thread>
 
 QImage convertToQImage(cv::Mat mat) noexcept;
 
@@ -27,18 +28,19 @@ struct CopiedMat : cv::Mat {
 // par Julien Vernay
 class ImageInput {
 public:
-    enum Direction { NONE, UP, LEFT, DOWN, RIGHT };
+    enum class Direction { NONE, UP, LEFT, DOWN, RIGHT, UNKNOWN };
 
     struct Result {
         CopiedMat capture, annotatedCapture, nose;
         cv::Rect faceRect = { 0, 0, 0, 0 }, noseRect = { 0, 0, 0, 0 };
-        Direction direction = NONE;
+        Direction direction = Direction::NONE;
     };
 
     // lance runtime_error si la caméra n'est pas ouverte correctement
     ImageInput(int indexCamera);
     ImageInput(ImageInput const&) = delete;
     ImageInput& operator=(ImageInput const&) = delete;
+    ~ImageInput() noexcept { stopParallel(); }
 
     // lance runtime_error si on n'a pas pu faire l'acquisition
     // ou qu'une erreur a eu lieu pendant le traitement
@@ -61,12 +63,18 @@ public:
     template<typename...Attributes>
     Result get(Attributes ImageInput::Result::* ... attributes) const;
 
+    // lance un thread qui fait "makeNewAcquisition" en boucle
+    void runParallel();
+    // laisse le "makeNewAcquisition" se finir puis arrête le thread
+    void stopParallel() { mRunningParallel = false; }
 private:
     cv::VideoCapture mCamera;
     cv::Size mCameraSize;
 
     Result mLastResult;
     mutable std::mutex mLastResultMtx;
+    std::atomic<bool> mRunningParallel = false;
+    std::thread mThread;
 };
 
 template<typename...Args>
@@ -75,9 +83,9 @@ constexpr int evalAll(Args...) { return sizeof...(Args); }
 template<typename...Attributes>
 ImageInput::Result ImageInput::get(Attributes ImageInput::Result::* ... attributes) const {
     Result r;
-    mLastResultMtx.lock();
+    mLastResultMtx.lock(); // mLastResult ne sera pas modifié pendant les copies
     evalAll(r.*attributes = mLastResult.*attributes...);
-    mLastResultMtx.unlock();
+    mLastResultMtx.unlock(); // les copies sont finies, on peut remodifier mLastResult
     return r;
 }
 
