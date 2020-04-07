@@ -4,25 +4,41 @@
 
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <stdexcept>
 #include <thread>
 
 namespace { // namespace anonyme : les fonctions définies ici ne sont pas accessibles depuis les autres fichiers
 
-cv::CascadeClassifier loadFaceClassifier() {
+cv::CascadeClassifier loadClassifierFromResource(QString resource)
+{
     cv::CascadeClassifier classifier;
     qDebug() << QDir::currentPath() << '\n';
-    if (!classifier.load("lbpcascade_frontalface_improved.xml"))
-        throw std::runtime_error("Erreur en chargeant 'lbpcascade_frontalface_improved.xml'");
+
+    QFile file(resource);
+    if(!file.open(QIODevice::ReadOnly | QFile::Text))
+    {
+        throw std::runtime_error("Erreur en ouvrant la ressource " + resource.toStdString());
+    }
+
+    QTextStream in(&file);
+    std::string fileStr = in.readAll().toStdString();
+    cv::FileStorage fs(fileStr, cv::FileStorage::READ | cv::FileStorage::MEMORY);
+
+    if (!classifier.read(fs.getFirstTopLevelNode()))
+    {
+        throw std::runtime_error("Erreur en chargeant le xml de " + resource.toStdString());
+    }
+
     return classifier;
 }
 
+cv::CascadeClassifier loadFaceClassifier() {
+    return loadClassifierFromResource(":/res/xml/frontalface.xml");
+}
+
 cv::CascadeClassifier loadNoseClassifier() {
-    cv::CascadeClassifier classifier;
-    qDebug() << QDir::currentPath() << '\n';
-    if (!classifier.load("haarcascade_mcs_nose.xml"))
-        throw std::runtime_error("Erreur en chargeant 'haarcascade_mcs_nose.xml'");
-    return classifier;
+    return loadClassifierFromResource(":/res/xml/nose.xml");
 }
 
 cv::CascadeClassifier& getFaceClassifier() {

@@ -35,3 +35,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_features2d420 \
     -lopencv_calib3d420\
     -lopencv_objdetect420
+
+RESOURCES += \
+    res/resources.qrc
