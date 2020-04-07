@@ -27,6 +27,7 @@ else {
 SOURCES += main.cpp \
     src/gamelogic.cpp \
     src/gameobjects/abstractitem.cpp \
+    src/gameobjects/bonustimeitem.cpp \
     src/gameobjects/goalitem.cpp \
     src/gameobjects/maze.cpp \
     src/gameobjects/player.cpp \
@@ -39,9 +40,11 @@ SOURCES += main.cpp \
 HEADERS  += \
     src/gamelogic.hpp \
     src/gameobjects/abstractitem.hpp \
+    src/gameobjects/bonustimeitem.hpp \
     src/gameobjects/cell.h \
     src/gameobjects/goalitem.hpp \
     src/gameobjects/maze.h \
+    src/gameobjects/penaltytimeitem.hpp \
     src/gameobjects/player.hpp \
     src/widgets/gamewidget.hpp \
     src/widgets/glscenewidget.hpp \

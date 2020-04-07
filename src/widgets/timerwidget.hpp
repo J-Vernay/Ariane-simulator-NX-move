@@ -31,6 +31,9 @@ public:
     void pause();
     void resume();
 
+    void subTime(int ms);
+    int getMs() { return mElapsedTime.elapsed() - mPauseTimeMs; };
+
 
 private slots:
     void refreshTimerDisplay();

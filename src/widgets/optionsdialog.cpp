@@ -1,6 +1,6 @@
 #include "optionsdialog.hpp"
 
-OptionsDialog::OptionsDialog(int currMazeWidth, int currMazeHeight,QWidget *parent) :
+OptionsDialog::OptionsDialog(int currMazeWidth, int currMazeHeight, bool bonusTimeEnabled, bool penaltyTimeEnabled, QWidget *parent) :
     QDialog(parent)
 {
     ui.setupUi(this);
@@ -9,6 +9,9 @@ OptionsDialog::OptionsDialog(int currMazeWidth, int currMazeHeight,QWidget *pare
 
     ui.widthValue->setValue(currMazeWidth);
     ui.heightValue->setValue(currMazeHeight);
+
+    ui.bonusTime->setChecked(bonusTimeEnabled);
+    ui.penaltyTime->setChecked(penaltyTimeEnabled);
 }
 
 int OptionsDialog::getMazeWidth()
@@ -19,4 +22,14 @@ int OptionsDialog::getMazeWidth()
 int OptionsDialog::getMazeHeight()
 {
     return ui.heightValue->value();
+}
+
+bool OptionsDialog::getIsBonusTimeEnabled()
+{
+    return ui.bonusTime->isChecked();
+}
+
+bool OptionsDialog::getIsPenaltyTimeEnabled()
+{
+    return ui.penaltyTime->isChecked();
 }

@@ -207,6 +207,20 @@ void GameLogic::restart()
     int goalYIdx = rand() % mMaze.getHeight();
     mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
 
+    if (mIsBonusTimeEnabled)
+    {
+        int bonustimeXIdx = rand() % mMaze.getWidth();
+        int bonustimeYIdx = rand() % mMaze.getHeight();
+        mItems.push_back(new BonusTimeItem(mTimerWidget, bonustimeXIdx + 0.5, bonustimeYIdx + 0.5));
+    }
+
+    if (mIsPenaltyTimeEnabled)
+    {
+        int penaltytimeXIdx = rand() % mMaze.getWidth();
+        int penaltytimeYIdx = rand() % mMaze.getHeight();
+        mItems.push_back(new PenaltyTimeItem(mTimerWidget, penaltytimeXIdx + 0.5, penaltytimeYIdx + 0.5));
+    }
+
     for (AbstractItem * item : mItems)
     {
         item->initGL();
@@ -223,12 +237,14 @@ void GameLogic::changeOptions()
 {
     mTimerWidget->pause();
 
-    OptionsDialog dialog(mMaze.getWidth(), mMaze.getHeight());
+    OptionsDialog dialog(mMaze.getWidth(), mMaze.getHeight(), mIsBonusTimeEnabled, mIsPenaltyTimeEnabled);
     int dialogResponse = dialog.exec();
 
     if (dialogResponse == QDialog::Accepted)
     {
         mMaze.resize(dialog.getMazeWidth(), dialog.getMazeHeight());
+        mIsBonusTimeEnabled = dialog.getIsBonusTimeEnabled();
+        mIsPenaltyTimeEnabled = dialog.getIsPenaltyTimeEnabled();
         restart();
     }
     else

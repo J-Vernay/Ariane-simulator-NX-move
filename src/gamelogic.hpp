@@ -9,6 +9,8 @@
 #include "gameobjects/player.hpp"
 #include "gameobjects/abstractitem.hpp"
 #include "gameobjects/goalitem.hpp"
+#include "gameobjects/bonustimeitem.hpp"
+#include "gameobjects/penaltytimeitem.hpp"
 
 #include <QTimer>
 #include <QTime>
@@ -30,6 +32,8 @@ class GameLogic : public QObject
     std::vector<AbstractItem *> mItems;
 
     QTimer mFrameTimer;
+
+    bool mIsBonusTimeEnabled = true, mIsPenaltyTimeEnabled = true;
 
 public:
     GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent = nullptr);

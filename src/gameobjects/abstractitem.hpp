@@ -11,9 +11,11 @@
  */
 class AbstractItem
 {
+protected:
     double mPosx, mPosy;
     double mRadius;
     double mAngle = 0.0;
+    bool mIsBad;
     QElapsedTimer mElapsedTimer;
 
     std::unique_ptr<GLUquadric, void(*)(GLUquadric *)> mQuadric;
@@ -21,7 +23,7 @@ class AbstractItem
     QString mTexturePath;
 
 public:
-    AbstractItem(double xpos, double ypos, double radius = 0.1, QString texturePath = QString(""));
+    AbstractItem(double xpos, double ypos, double radius = 0.1, QString texturePath = QString(""), bool isBad = false);
     virtual ~AbstractItem(){};
 
     void initGL();

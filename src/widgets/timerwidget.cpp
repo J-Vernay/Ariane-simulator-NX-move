@@ -63,6 +63,11 @@ void TimerWidget::resume()
     mTimer.start();
 }
 
+void TimerWidget::subTime(int ms)
+{
+    mPauseTimeMs += ms;
+}
+
 void TimerWidget::refreshTimerDisplay()
 {
     QTime elapsed = QTime(0,0,0,0).addMSecs(mElapsedTime.elapsed() - mPauseTimeMs);

@@ -4,5 +4,6 @@
     </qresource>
     <qresource prefix="/res/textures">
         <file alias="logoTSE.png">textures/logoTSE.png</file>
+        <file alias="hourglass.png">textures/hourglass.png</file>
     </qresource>
 </RCC>

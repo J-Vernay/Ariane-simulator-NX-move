@@ -10,9 +10,9 @@ const double Z_VARIATION = 0.1;
 const double Z_SPEED = 1/500.0;
 const double ANGLE_SPEED = 0.7;
 
-AbstractItem::AbstractItem(double xpos, double ypos, double radius, QString texturePath)
-    : mPosx(xpos), mPosy(ypos), mRadius(radius), mQuadric(gluNewQuadric(), gluDeleteQuadric),
-      mTexturePath(texturePath)
+AbstractItem::AbstractItem(double xpos, double ypos, double radius, QString texturePath, bool isBad)
+    : mPosx(xpos), mPosy(ypos), mRadius(radius), mIsBad(isBad),
+      mQuadric(gluNewQuadric(), gluDeleteQuadric), mTexturePath(texturePath)
 {
     mElapsedTimer.start();
 }
@@ -59,8 +59,13 @@ void AbstractItem::displayGL(const double xStep, const double yStep, const doubl
     glTranslated(mPosx * xStep, mPosy * yStep, zpos * zStep);
     glRotated(mAngle, 0, 0, 1);
 
-    // Mis en place de la lumière émise
-    float emittedLight[] = {0.5, 0.5, 0.7, 0.8};
+    // Mis en place de la lumière émise (bleu si bonus, rouge si malus)
+    float emittedLight[] = {0.5, 0.5, 0.9, 1.0};
+    if (mIsBad)
+    {
+        emittedLight[0] = 0.9;
+        emittedLight[2] = 0.5;
+    }
     glMaterialfv(GL_FRONT, GL_EMISSION, emittedLight);
 
     // Dessin de la sphere
