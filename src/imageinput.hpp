@@ -3,90 +3,57 @@
 
 #include "opencv2/opencv.hpp"
 #include <QImage>
-#include <mutex>
-#include <atomic>
-#include <tuple>
 #include <thread>
 
 QImage convertToQImage(cv::Mat mat) noexcept;
+
+struct State {
+    cv::Mat grayNose;
+    cv::Rect faceRect;
+    cv::Point noseCenter;
+
+    State() = default;
+    // the copy operations do deep-copy
+    State(State const& s) { *this = s; }
+    State& operator=(State const& s);
+};
+
+// processFrame fait le pur traitement d'image : localisation du nez et du visage
+State processFrame(cv::Mat frame, State const& previous = {}) noexcept;
+// permet de dessiner les infos de debug, la fonction travaille sur une copie qu'elle retourne
+cv::Mat drawDebug(cv::Mat frameIn, State const& state) noexcept;
+
+enum class Direction { NONE, UP, DOWN, LEFT, RIGHT, UNKNOWN };
+inline char const* getName(Direction d) noexcept {
+    static char const* const names[] = { "NONE", "UP", "DOWN", "LEFT", "RIGHT", "UNKNOWN" };
+    return names[static_cast<int>(d)];
+}
+// permet de trouver la direction grâce à l'état récupéré par processFrame
+Direction findDirection(State const& state) noexcept;
 
 template<typename T>
 cv::Point_<T> getCenter(cv::Rect_<T> const& r) noexcept {
     return (r.tl() + r.br()) / 2;
 }
 
-// comme cv::Mat mais réalise des copies de valeur au lieu de copies de référence
-// avantage : permet de laisser le compilateur créer les opérateurs de copie par défaut
-// pour la classe ImageInput::Result (et ne pas devoir utiliser .clone())
-// On peut toujours créer une cv::Mat d'une CopiedMat ce qui sera bien une référence
-struct CopiedMat : cv::Mat {
-    CopiedMat() noexcept {}
-    CopiedMat(cv::Mat m) noexcept : Mat(m.clone()) {}
-    CopiedMat& operator=(cv::Mat m) noexcept { m.copyTo(*this); return *this; }
-};
-
-// par Julien Vernay
-class ImageInput {
+class ThreadWrapper {
 public:
-    enum class Direction { NONE, UP, LEFT, DOWN, RIGHT, UNKNOWN };
+    ThreadWrapper(int videoCaptureIndex = 0);
 
-    struct Result {
-        CopiedMat capture, annotatedCapture, nose;
-        cv::Rect faceRect = { 0, 0, 0, 0 }, noseRect = { 0, 0, 0, 0 };
-        Direction direction = Direction::NONE;
-    };
-
-    // lance runtime_error si la caméra n'est pas ouverte correctement
-    ImageInput(int indexCamera);
-    ImageInput(ImageInput const&) = delete;
-    ImageInput& operator=(ImageInput const&) = delete;
-    ~ImageInput() noexcept { stopParallel(); }
-
-    // lance runtime_error si on n'a pas pu faire l'acquisition
-    // ou qu'une erreur a eu lieu pendant le traitement
-    void makeNewAcquisition();
-
-    // thread-safe
-    Result getAll() const;
-
-    // thread-safe
-    // permet d'éviter de TOUT copier, mais les attributs demandés
-    // seront synchronisés entre eux (tandis que faire getLastCapture,
-    // getDirection... en appels séparés fait qu'ils peuvent être changés
-    // entre deux appels aux getters)
-    // Exemple d'utilisation :
-    // using R = ImageInput::Result;
-    // R r = input.get(&R::lastCapture, &R::direction);
-    // r.capture   -> OK
-    // r.direction -> OK
-    // r.nose      -> Pas copié ! Encore valeur par défaut
-    template<typename...Attributes>
-    Result get(Attributes ImageInput::Result::* ... attributes) const;
-
-    // lance un thread qui fait "makeNewAcquisition" en boucle
-    void runParallel();
-    // laisse le "makeNewAcquisition" se finir puis arrête le thread
-    void stopParallel() { mRunningParallel = false; }
+    bool isActive() { std::unique_lock lg(mMtx); return mActive; }
+    void stop() { std::unique_lock lg(mMtx); mActive = false; }
+    State getState() { std::unique_lock lg(mMtx); return mState; }
+    cv::Mat getFrame() { std::unique_lock lg(mMtx); return mFrame.clone(); }
+    Direction getDirection() { std::unique_lock lg(mMtx); return findDirection(mState); }
+    std::pair<State, cv::Mat> getStateAndFrame() { std::unique_lock lg(mMtx); return { mState, mFrame.clone() }; }
 private:
-    cv::VideoCapture mCamera;
-    cv::Size mCameraSize;
-
-    Result mLastResult;
-    mutable std::mutex mLastResultMtx;
-    std::atomic<bool> mRunningParallel = false;
+    std::mutex mMtx;
     std::thread mThread;
+    cv::VideoCapture mVideoCapture;
+    cv::Mat mFrame;
+    State mState;
+    bool mActive;
 };
 
-template<typename...Args>
-constexpr int evalAll(Args...) { return sizeof...(Args); }
-
-template<typename...Attributes>
-ImageInput::Result ImageInput::get(Attributes ImageInput::Result::* ... attributes) const {
-    Result r;
-    mLastResultMtx.lock(); // mLastResult ne sera pas modifié pendant les copies
-    evalAll(r.*attributes = mLastResult.*attributes...);
-    mLastResultMtx.unlock(); // les copies sont finies, on peut remodifier mLastResult
-    return r;
-}
 
 #endif // IMAGEINPUT_HPP

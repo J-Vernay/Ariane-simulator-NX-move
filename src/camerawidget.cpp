@@ -1,8 +1,10 @@
 #include "camerawidget.hpp"
+#include <stdexcept>
+#include <QDebug>
 
-CameraWidget::CameraWidget(ImageInput& input, QWidget *parent) :
+CameraWidget::CameraWidget(ThreadWrapper& tw, QWidget *parent) :
     QWidget(parent),
-    mInput(input)
+    mTW(tw)
 {
     mLayout = new QVBoxLayout;
     mLabel = new QLabel("Chargement...");
@@ -17,11 +19,11 @@ CameraWidget::CameraWidget(ImageInput& input, QWidget *parent) :
 }
 
 void CameraWidget::reloadCameraDisplay() {
-    mInput.makeNewAcquisition();
+    auto [ state, frame ] = mTW.getStateAndFrame();
 
-    using R = ImageInput::Result;
-    R r = mInput.get(&R::annotatedCapture, &R::faceRect);
+    auto debugFrame = drawDebug(frame, state);
+    qDebug() << getName(findDirection(state));
 
-    mLabel->setPixmap(QPixmap::fromImage(convertToQImage(r.annotatedCapture)));
+    mLabel->setPixmap(QPixmap::fromImage(convertToQImage(debugFrame)));
     mLabel->resize(mLabel->pixmap()->size());
 }

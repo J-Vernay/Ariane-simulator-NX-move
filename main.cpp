@@ -5,8 +5,8 @@
 int main(int argc, char *argv[]) {
     try {
         QApplication a(argc, argv);
-        ImageInput input(0);
-        CameraWidget w(input);
+        ThreadWrapper tw;
+        CameraWidget w(tw);
         w.show();
 
         return a.exec();

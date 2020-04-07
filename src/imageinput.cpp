@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <thread>
 
-namespace {
+namespace { // namespace anonyme : les fonctions définies ici ne sont pas accessibles depuis les autres fichiers
 
 cv::CascadeClassifier loadFaceClassifier() {
     cv::CascadeClassifier classifier;
@@ -42,7 +42,7 @@ int distSquared(cv::Point a, cv::Point b) {
 
 struct nearestRect { cv::Rect object; int rejectLevel; double levelWeight; };
 
-nearestRect findNearest(cv::CascadeClassifier& classifier, cv::Mat img, cv::Rect prev) {
+nearestRect findNearest(cv::CascadeClassifier& classifier, cv::Mat img, cv::Point lastFaceCenter) {
     static std::vector<cv::Rect> potential;
     static std::vector<int> rejectLevels;
     static std::vector<double> levelWeights;
@@ -50,15 +50,13 @@ nearestRect findNearest(cv::CascadeClassifier& classifier, cv::Mat img, cv::Rect
     classifier.detectMultiScale(img, potential, rejectLevels, levelWeights, 1.1, 3, 0, cv::Size(), cv::Size(), true);
 
     switch (potential.size()) {
-    case 0: // on reprend la face précédente
-        return { prev, 0, 0 };
+    case 0: // on retourne rien
+        return {};
 
     case 1:
         return { potential[0], rejectLevels[0], levelWeights[0] };
 
     default: {// on prend la tête qui est la plus proche de l'ancienne
-        cv::Point lastFaceCenter = getCenter(prev);
-
         int dist = distSquared(lastFaceCenter, getCenter(potential[0]));
         int i_min = 0;
         for (std::size_t i = 1; i < potential.size(); ++i) {
@@ -73,32 +71,14 @@ nearestRect findNearest(cv::CascadeClassifier& classifier, cv::Mat img, cv::Rect
     }
 }
 
-void drawRect(cv::Mat out, cv::Rect rect, cv::Scalar color, int thicknessOut = 2, int thicknessIn = 1) {
-    cv::Point
-            top = { rect.x + rect.width/2, rect.y },
-            bottom = { top.x, top.y + rect.height },
-            left = { rect.x, rect.y + rect.height/2 },
-            right = { left.x + rect.width, left.y };
-
-    cv::line(out, top, bottom, color, thicknessIn);
-    cv::line(out, left, right, color, thicknessIn);
-    cv::rectangle(out, rect, color, thicknessOut);
-}
-
-
-cv::Rect correlation(cv::Mat image, cv::Mat pattern) {
+cv::Rect grayCorrelation(cv::Mat image, cv::Mat pattern) {
     cv::Mat matchResult;
     int result_cols =  image.cols - pattern.size().width  + 1;
     int result_rows = image.rows - pattern.size().height + 1;
     matchResult.create(result_cols, result_rows, CV_32FC1);
 
-    // on fait la corrélation sur les images en niveaux de gris
-    cv::Mat faceGray, noseGray;
-    cv::cvtColor(image, faceGray, cv::COLOR_BGR2GRAY);
-    cv::cvtColor(pattern, noseGray, cv::COLOR_BGR2GRAY);
-
     // on prend la coordonnée qui maximise la corrélation
-    cv::matchTemplate(faceGray, noseGray, matchResult, cv::TM_SQDIFF);
+    cv::matchTemplate(image, pattern, matchResult, cv::TM_SQDIFF);
     cv::Point extremumLoc;
     cv::minMaxLoc(matchResult, nullptr, nullptr, &extremumLoc, nullptr);
     // les coordonnées retournées sont relatives à (result_cols, result_rows)
@@ -112,104 +92,146 @@ cv::Rect correlation(cv::Mat image, cv::Mat pattern) {
     return rect;
 }
 
+}; // fin du namespace anonyme
 
-}; // namespace
 
 QImage convertToQImage(cv::Mat mat) noexcept {
+    if (mat.empty()) return QImage();
+
     // Miroir horizontal pour remettre à gauche de l'image
     // pour que cela corresponde à la gauche de l'utilisateur
     cv::flip(mat ,mat, 1);
     // Passer de BGR à RGB
-    cv::cvtColor(mat ,mat, cv::COLOR_BGR2RGB);
+    cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+
     return QImage((const unsigned char*)(mat.data),
                   mat.cols, mat.rows, QImage::Format_RGB888);
 }
 
-ImageInput::ImageInput(int index) :
-    mCamera{index}
-{
-    if (!mCamera.isOpened())
-        throw std::runtime_error(QString("La caméra n°%1 n'a pas pu être accédée.")
-                                        .arg(index).toStdString());
-    mCamera.set(cv::CAP_PROP_FRAME_WIDTH,240);
-    mCamera.set(cv::CAP_PROP_FRAME_HEIGHT,180);
-    mCameraSize.width = mCamera.get(cv::CAP_PROP_FRAME_WIDTH);
-    mCameraSize.height = mCamera.get(cv::CAP_PROP_FRAME_HEIGHT);
-    qDebug() << QString("La caméra n°%1 est ouverte, de dimension %2*%3px.")
-                       .arg(index).arg(mCameraSize.width).arg(mCameraSize.height);
-
+State& State::operator=(State const& s) {
+    faceRect = s.faceRect;
+    noseCenter = s.noseCenter;
+    s.grayNose.copyTo(grayNose);
+    return *this;
 }
 
+State processFrame(cv::Mat frame, State const& previous) noexcept {
+    State current;
 
-void ImageInput::runParallel() {
-    if (!this->mRunningParallel) {
-        this->mRunningParallel = true;
-        mThread = std::thread([this] {
-            while (this->mRunningParallel) {
-                makeNewAcquisition();
+    // si on a un nez précédent, on cherche le nez le plus proche spatialement de l'ancien
+    // sinon, on prend le nez le plus proche du centre de l'image
+    auto nose = findNearest(getNoseClassifier(), frame,
+                 (previous.grayNose.empty() ? cv::Point(frame.size().width, frame.size().height) : previous.noseCenter));
+
+    // si on a détecté le nez avec suffisamment de confiance
+    if (!nose.object.empty() && nose.levelWeight >= 1.8) {
+        auto noseCenter = getCenter(nose.object);
+        // avoir détecté le nez avec le classifieur en cascade signifie qu'on est probablement
+        // en position neutre, au quel cas, on recherche le visage
+        auto face = findNearest(getFaceClassifier(), frame, noseCenter);
+
+        current.noseCenter = getCenter(nose.object);
+        cv::cvtColor(frame(nose.object), current.grayNose, cv::COLOR_BGR2GRAY);
+        current.faceRect = (!face.object.empty() && face.levelWeight > 1.5) ?
+                face.object : // si on a détecté le visage avec suffisamment de confiance
+                previous.faceRect; // sinon on reprend l'ancien visage
+    }
+    // sinon, on a pas détecté de nez avec le classifieur
+    // au quel cas, si on a le nez précédent, on le recherche par corrélation dans la nouvelle image
+    else if (!previous.grayNose.empty()) {
+        cv::Mat grayFrame;
+        cv::cvtColor(frame, grayFrame, cv::COLOR_BGR2GRAY);
+        auto noseRect = grayCorrelation(grayFrame, previous.grayNose);
+        current.grayNose = grayFrame(noseRect).clone();
+        current.noseCenter = getCenter(noseRect);
+        current.faceRect = previous.faceRect;
+    } else {
+        current = previous;
+    }
+
+    return current;
+}
+
+cv::Mat drawDebug(cv::Mat frameIn, State const& state) noexcept {
+    if (frameIn.empty()) return cv::Mat();
+
+    cv::Mat frame;
+    frameIn.copyTo(frame);
+
+    auto [ frameWidth, frameHeight ] = frame.size();
+    auto const& face = state.faceRect;
+
+    // rectangle du visage
+    cv::rectangle(frame, state.faceRect, { 0, 0, 255 }, 2);
+    // "vecteur" entre le nez et le visage
+    cv::line(frame, getCenter(state.faceRect), state.noseCenter, { 255, 255, 0 }, 2);
+
+    cv::line(frame, cv::Point(face.x + 0.4*face.width, 0),
+                    cv::Point(face.x + 0.4*face.width, frameHeight), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(face.x + 0.6*face.width, 0),
+                    cv::Point(face.x + 0.6*face.width, frameHeight), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(0, face.y + 0.4*face.height),
+                    cv::Point(frameWidth, face.y + 0.4*face.height), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(0, face.y + 0.55*face.height),
+                    cv::Point(frameWidth, face.y + 0.55*face.height), { 0, 255, 0 }, 1);
+
+    return frame;
+}
+
+Direction findDirection(State const& state) noexcept {
+    Direction direction = Direction::UNKNOWN;
+
+    if (!state.faceRect.empty()) {
+        cv::Point_<float> relativePos = (state.noseCenter - getCenter(state.faceRect));
+        relativePos.x /= state.faceRect.width / 2;
+        relativePos.y /= state.faceRect.height / 2;
+
+        if (std::hypot(relativePos.x, relativePos.y) > 1) {
+            direction = Direction::UNKNOWN; // abérrant que le nez soit très loin du visage
+        } else {
+            if      (relativePos.x < -0.1 ) direction = Direction::RIGHT;
+            else if (relativePos.x >  0.1 ) direction = Direction::LEFT;
+            else if (relativePos.y < -0.1 ) direction = Direction::UP;
+            else if (relativePos.y >  0.05) direction = Direction::DOWN;
+            else                            direction = Direction::NONE;
+        }
+    }
+
+    return direction;
+}
+
+ThreadWrapper::ThreadWrapper(int videoCaptureIndex) :
+    mVideoCapture(videoCaptureIndex),
+    mActive(mVideoCapture.isOpened())
+{
+    if (mActive) {
+        mVideoCapture.set(cv::CAP_PROP_FRAME_WIDTH,240);
+        mVideoCapture.set(cv::CAP_PROP_FRAME_HEIGHT,180);
+
+        mThread = std::thread([&] {
+            cv::Mat frame;
+            while (true) {
+                this->mMtx.lock();
+                if (!this->mActive)
+                    break;
+                State prevState = this->mState;
+                this->mMtx.unlock();
+
+                if (!mVideoCapture.read(frame))
+                    break;
+                State nextState = processFrame(frame, prevState);
+
+                this->mMtx.lock();
+                this->mState = nextState;
+                frame.copyTo(this->mFrame);
+                this->mMtx.unlock();
+
+                // indication pour dire au processeur qu'on peut attendre un peu
+                std::this_thread::yield();
             }
+            this->mMtx.lock();
+            this->mActive = false;
+            this->mMtx.unlock();
         });
     }
-}
-
-ImageInput::Result ImageInput::getAll() const {
-    std::lock_guard lock(mLastResultMtx); // unlock() dans le destructeur
-    return mLastResult;
-}
-
-void ImageInput::makeNewAcquisition() {
-    Result prev = getAll();
-    Result result = prev; // les paramètres qui ne sont pas explicitement "setté" sont repris de la frame précédente
-
-    if (!mCamera.read(result.capture))
-        throw std::runtime_error("L'acquisition par la caméra n'a pas pu être réalisée.");
-
-    result.annotatedCapture = result.capture;
-
-    Direction dir = Direction::NONE;
-    auto nose = findNearest(getNoseClassifier(), result.capture, prev.noseRect);
-    if (nose.object.empty() || nose.levelWeight <= 1.8) {
-        if (prev.noseRect.empty()) { // on a pas encore trouvé de nez
-            dir = Direction::UNKNOWN;
-        } else { // on a déjà un nez à chercher par corrélation
-            result.noseRect = correlation(result.capture, prev.nose);
-            result.nose = result.capture(result.noseRect);
-        }
-    } else { // on a trouvé le nez donc ça veut dire que le visage est bien en face
-        result.noseRect = nose.object;
-        result.nose = result.capture(result.noseRect);
-        // le visage étant bien en face, on le recherche (on prend le + proche du nez)
-        auto face = findNearest(getFaceClassifier(), result.capture, result.noseRect);
-        if (!face.object.empty() && face.levelWeight > 1.5) { // on a trouvé un visage : on met à jour
-            result.faceRect = face.object;
-        }
-    }
-    if (dir != Direction::UNKNOWN) {
-        cv::Point_<float> vecDiff = (getCenter(result.noseRect) - getCenter(result.faceRect));
-        vecDiff.x /= result.faceRect.size().width;
-        vecDiff.y /= result.faceRect.size().height;
-
-        if (vecDiff.x > 1.5f || vecDiff.x < -1.5f || vecDiff.y > 1.5f || vecDiff.y < -1.5f) {
-            dir = Direction::UNKNOWN; // abérrant que le nez soit très loin du visage
-        } else {
-            if (vecDiff.x < -0.1) dir = Direction::RIGHT;
-            else if (vecDiff.x > 0.1) dir = Direction::LEFT;
-            else if (vecDiff.y < -0.1) dir = Direction::UP;
-            else if (vecDiff.y > 0.05) dir = Direction::DOWN;
-        }
-        qDebug() << vecDiff.x << " ; " << vecDiff.y << "\n";
-    }
-    cv::flip(result.annotatedCapture, result.annotatedCapture, 1);
-    char const* nomsDir[] = { "NONE", "UP", "LEFT", "DOWN", "RIGHT", "UNKNOWN" };
-    cv::putText(result.annotatedCapture, nomsDir[(int)dir], {20,20}, cv::FONT_HERSHEY_PLAIN,
-            2, cv::Scalar(255, 0, 255), 2);
-    cv::flip(result.annotatedCapture, result.annotatedCapture, 1);
-
-    result.direction = dir;
-    drawRect(result.annotatedCapture, result.faceRect, cv::Scalar(0, 0, 255));
-    drawRect(result.annotatedCapture, result.noseRect, cv::Scalar(255, 255, 0));
-
-    mLastResultMtx.lock();
-    mLastResult = result;
-    mLastResultMtx.unlock();
 }
