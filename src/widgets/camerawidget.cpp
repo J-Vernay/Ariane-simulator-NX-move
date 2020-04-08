@@ -26,4 +26,5 @@ void CameraWidget::reloadCameraDisplay() {
 
     mLabel->setPixmap(QPixmap::fromImage(convertToQImage(debugFrame)));
     mLabel->resize(mLabel->pixmap()->size());
+    this->resize(mLabel->size());
 }

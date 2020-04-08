@@ -13,8 +13,6 @@ class CameraWidget : public QWidget
 public:
     explicit CameraWidget(ThreadWrapper& tw, QWidget *parent = nullptr);
 
-
-
 private slots:
     void reloadCameraDisplay();
 

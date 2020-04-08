@@ -2,15 +2,17 @@
 
 #include <QPushButton>
 #include <QKeyEvent>
+#include <QDebug>
 
 // Declarations des constantes
 const unsigned int WIN_WIDTH  = 1600;
 const unsigned int WIN_HEIGHT = 900;
 const double MINIMAP_SCALE = 0.2;
-
+const double CAMERA_SCALE = 0.3;
 
 GameWidget::GameWidget(QWidget *parent) :
     QWidget(parent), mSceneWidget(parent), mMapWidget(&mSceneWidget), mTimerWidget(&mSceneWidget),
+    mCameraThread(0), mCameraWidget(mCameraThread, &mSceneWidget),
     mGameLogic(&mSceneWidget, &mMapWidget, &mTimerWidget)
 {
     resize(WIN_WIDTH, WIN_HEIGHT);
@@ -47,6 +49,13 @@ void GameWidget::resizeEvent(QResizeEvent *event)
 
     int timerposx = (mSceneWidget.width() - mTimerWidget.width()) / 2;
     mTimerWidget.move(timerposx, 0);
+
+    double cameraRatio = (double)(mCameraThread.getCameraFrameWidth()) / mCameraThread.getCameraFrameHeight();
+    int cameraWidth = mSceneWidget.width() * CAMERA_SCALE, cameraHeight = cameraWidth / cameraRatio;
+    int cameraposx = (mSceneWidget.width() - cameraWidth);
+    mCameraWidget.setGeometry(cameraposx, 0, cameraWidth,cameraHeight);
+
+    update();
 }
 
 void GameWidget::keyPressEvent(QKeyEvent *event)

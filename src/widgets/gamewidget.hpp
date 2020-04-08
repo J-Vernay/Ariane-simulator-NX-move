@@ -6,6 +6,8 @@
 #include "glscenewidget.hpp"
 #include "mazemapwidget.hpp"
 #include "timerwidget.hpp"
+#include "camerawidget.hpp"
+#include "../imageinput.hpp"
 #include "../gamelogic.hpp"
 
 /**
@@ -24,10 +26,15 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
+
     // Widgets contenus
     GLSceneWidget mSceneWidget;
     MazeMapWidget mMapWidget;
     TimerWidget mTimerWidget;
+
+    // Thread et widget pour la camera
+    ThreadWrapper mCameraThread;
+    CameraWidget mCameraWidget;
 
     // Layout principal
     QVBoxLayout * mMainLayout;

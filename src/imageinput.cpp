@@ -221,8 +221,8 @@ ThreadWrapper::ThreadWrapper(int videoCaptureIndex) :
     mActive(mVideoCapture.isOpened())
 {
     if (mActive) {
-        mVideoCapture.set(cv::CAP_PROP_FRAME_WIDTH,240);
-        mVideoCapture.set(cv::CAP_PROP_FRAME_HEIGHT,180);
+        mVideoCapture.set(cv::CAP_PROP_FRAME_WIDTH,mCameraFrameWidth);
+        mVideoCapture.set(cv::CAP_PROP_FRAME_HEIGHT,mCameraFrameHeight);
 
         mThread = std::thread([&] {
             cv::Mat frame;
