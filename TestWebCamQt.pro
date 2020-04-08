@@ -11,15 +11,15 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TestWebCamQt
 TEMPLATE = app
 
+CONFIG += c++17
 
 SOURCES += main.cpp \
-    camera.cpp
+    src/imageinput.cpp \
+    src/widgets/camerawidget.cpp
 
 HEADERS  += \
-    camera.h
-
-FORMS    += \
-    camera.ui
+    src/imageinput.hpp \
+    src/widgets/camerawidget.hpp
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 
@@ -30,4 +30,8 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_imgcodecs420 \
     -lopencv_videoio420 \
     -lopencv_features2d420 \
-    -lopencv_calib3d420
+    -lopencv_calib3d420\
+    -lopencv_objdetect420
+
+RESOURCES += \
+    res/resources.qrc

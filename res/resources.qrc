@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/res/xml">
+        <file alias="nose.xml">xml/haarcascade_mcs_nose.xml</file>
+        <file alias="frontalface.xml">xml/lbpcascade_frontalface_improved.xml</file>
+    </qresource>
+</RCC>
