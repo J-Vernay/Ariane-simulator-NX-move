@@ -35,6 +35,9 @@ private:
     // Thread et widget pour la camera
     ThreadWrapper mCameraThread;
     CameraWidget mCameraWidget;
+    // timer pour vérifier la direction détectée périodiquement
+    QTimer* mCameraTimer;
+    GameLogic::Direction mLastDir = GameLogic::STOP;
 
     // Layout principal
     QVBoxLayout * mMainLayout;
@@ -47,6 +50,7 @@ private:
     GameLogic mGameLogic;
 
 private slots:
+    void getCameraDirection();
     void quit();
 
 };

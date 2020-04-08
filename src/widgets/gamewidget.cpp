@@ -41,6 +41,11 @@ GameWidget::GameWidget(QWidget *parent) :
     connect(exitButton, SIGNAL(pressed()), this, SLOT(quit()));
 
     mSceneWidget.setFocusPolicy(Qt::StrongFocus);
+
+    mCameraTimer = new QTimer(this);
+    mCameraTimer->setInterval(100);
+    connect(mCameraTimer, SIGNAL(timeout()), this, SLOT(getCameraDirection()));
+    mCameraTimer->start();
 }
 
 void GameWidget::resizeEvent(QResizeEvent *event)
@@ -58,8 +63,33 @@ void GameWidget::resizeEvent(QResizeEvent *event)
     update();
 }
 
-void GameWidget::keyPressEvent(QKeyEvent *event)
+void GameWidget::keyPressEvent(QKeyEvent *) {}
+
+void GameWidget::getCameraDirection()
 {
+    qDebug() << "TEST";
+    switch (mCameraThread.getDirection()) {
+    case Direction::UP:
+        mLastDir = GameLogic::Direction::FORWARD;
+        break;
+    case Direction::DOWN:
+        mLastDir = GameLogic::Direction::BACKWARD;
+        break;
+    case Direction::LEFT:
+        mLastDir = GameLogic::Direction::LEFT;
+        break;
+    case Direction::RIGHT:
+        mLastDir = GameLogic::Direction::RIGHT;
+        break;
+    case Direction::NONE:
+        mLastDir = GameLogic::Direction::STOP;
+        break;
+    default:
+        // dans le cas où Direction::UNKNOWN, on garde la direction d'avant
+        break;
+    }
+    mGameLogic.movePlayer(mLastDir);
+#if 0
     switch(event->key())
     {
         case Qt::Key_Up:
@@ -78,6 +108,7 @@ void GameWidget::keyPressEvent(QKeyEvent *event)
             mGameLogic.movePlayer(GameLogic::Direction::STOP);
             break;
     }
+#endif
 }
 
 void GameWidget::quit()

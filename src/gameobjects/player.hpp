@@ -10,7 +10,7 @@ class Player
 {
     double mPosX, mPosY;                        // Position logique : une case du labyrinthe constitue 1 unité
     double mAngle;                              // Orientation
-    const double mWalkSpeed = 0.2;              // Vitesse de déplacement du joueur
+    const double mWalkSpeed = 0.1;              // Vitesse de déplacement du joueur
     const double mRotateSpeed = M_PI / 30.0;    // Vitesse de rotation du joueur
     const double mHitboxRadius = 0.1;           // Taille de la hitbox du joueur.
 
