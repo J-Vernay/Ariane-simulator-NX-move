@@ -1,12 +1,11 @@
-#include "src/widgets/camerawidget.hpp"
+#include "src/widgets/gamewidget.hpp"
 #include <QApplication>
 #include <QDebug>
 
 int main(int argc, char *argv[]) {
     try {
         QApplication a(argc, argv);
-        ThreadWrapper tw;
-        CameraWidget w(tw);
+        GameWidget w;
         w.show();
 
         return a.exec();

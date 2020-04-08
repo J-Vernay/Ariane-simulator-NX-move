@@ -10,16 +10,55 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = TestWebCamQt
 TEMPLATE = app
-
+QT       += core gui opengl widgets
 CONFIG += c++17
 
+# ajout des libs au linker
+win32 {
+    win32-msvc* {
+        LIBS     += opengl32.lib glu32.lib
+    } else {
+        LIBS     += -lopengl32 -lglu32
+    }
+}
+else {
+        LIBS     += -lGL -lGLU
+}
+
 SOURCES += main.cpp \
+    src/gamelogic.cpp \
+    src/gameobjects/abstractitem.cpp \
+    src/gameobjects/bonustimeitem.cpp \
+    src/gameobjects/goalitem.cpp \
+    src/gameobjects/maze.cpp \
+    src/gameobjects/player.cpp \
+    src/widgets/gamewidget.cpp \
+    src/widgets/glscenewidget.cpp \
+    src/widgets/mazemapwidget.cpp \
+    src/widgets/optionsdialog.cpp \
+    src/widgets/timerwidget.cpp \
     src/imageinput.cpp \
     src/widgets/camerawidget.cpp
 
 HEADERS  += \
+    src/gamelogic.hpp \
+    src/gameobjects/abstractitem.hpp \
+    src/gameobjects/bonustimeitem.hpp \
+    src/gameobjects/cell.h \
+    src/gameobjects/goalitem.hpp \
+    src/gameobjects/maze.h \
+    src/gameobjects/penaltytimeitem.hpp \
+    src/gameobjects/player.hpp \
+    src/widgets/gamewidget.hpp \
+    src/widgets/glscenewidget.hpp \
+    src/widgets/mazemapwidget.hpp \
+    src/widgets/optionsdialog.hpp \
+    src/widgets/timerwidget.hpp \
     src/imageinput.hpp \
     src/widgets/camerawidget.hpp
+
+FORMS    += \
+    src/widgets/optionsdialog.ui
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 

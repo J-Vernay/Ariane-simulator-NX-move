@@ -1,0 +1,21 @@
+IMPERATIFS
+
+- Donner une épaisseur aux murs
+- Gérer l'apparition et la disparition de la minimap
+- Changer le nom du projet
+- Changer le nom du dossier models ou le supprimer
+- Ajouter une classe abstraite Item pour représenter les objets à collecter
+- Ajouter la classe de l'item d'objectif
+- Ajouter un système de chronomètre
+- Ajouter une option (?) permettant de changer la taille du labyrinthe
+- Détecter et gérer la fin de partie
+
+BONUS
+
+- Ajouter un item qui fait apparaitre le plan en permanence ou pendant X secondes
+- Ajouter un item qui enlève du temps du chronomètre
+- Ajouter des équivalents "malus" des items précédents
+- Ajouter un item qui tourne le joueur dans la direction 
+	de l'objectif s'il n'a pas été trouvé
+	de la sortie si l'objectif a été trouvé
+- Texturer les murs, le sol et le plafond (pas sûr, l'énoncé l'interdit)
