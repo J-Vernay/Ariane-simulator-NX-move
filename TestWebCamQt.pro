@@ -14,15 +14,12 @@ TEMPLATE = app
 CONFIG += c++17
 
 SOURCES += main.cpp \
-    src/camerawidget.cpp \
-    src/imageinput.cpp
+    src/imageinput.cpp \
+    src/widgets/camerawidget.cpp
 
 HEADERS  += \
-    src/camerawidget.hpp \
-    src/imageinput.hpp
-
-FORMS    += \
-    camera.ui
+    src/imageinput.hpp \
+    src/widgets/camerawidget.hpp
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 

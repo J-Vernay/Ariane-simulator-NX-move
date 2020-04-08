@@ -1,4 +1,4 @@
-#include "src/camerawidget.hpp"
+#include "src/widgets/camerawidget.hpp"
 #include <QApplication>
 #include <QDebug>
 

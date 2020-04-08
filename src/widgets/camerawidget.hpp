@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QTimer>
-#include "imageinput.hpp"
+#include "../imageinput.hpp"
 
 class CameraWidget : public QWidget
 {
