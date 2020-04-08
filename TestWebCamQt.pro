@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = TestWebCamQt
 TEMPLATE = app
 QT       += core gui opengl widgets
+CONFIG += c++17
 
 # ajout des libs au linker
 win32 {
@@ -35,7 +36,9 @@ SOURCES += main.cpp \
     src/widgets/glscenewidget.cpp \
     src/widgets/mazemapwidget.cpp \
     src/widgets/optionsdialog.cpp \
-    src/widgets/timerwidget.cpp
+    src/widgets/timerwidget.cpp \
+    src/imageinput.cpp \
+    src/widgets/camerawidget.cpp
 
 HEADERS  += \
     src/gamelogic.hpp \
@@ -50,7 +53,9 @@ HEADERS  += \
     src/widgets/glscenewidget.hpp \
     src/widgets/mazemapwidget.hpp \
     src/widgets/optionsdialog.hpp \
-    src/widgets/timerwidget.hpp
+    src/widgets/timerwidget.hpp \
+    src/imageinput.hpp \
+    src/widgets/camerawidget.hpp
 
 FORMS    += \
     src/widgets/optionsdialog.ui
@@ -64,7 +69,8 @@ LIBS += -L$$(OPENCV_DIR)\lib \
     -lopencv_imgcodecs420 \
     -lopencv_videoio420 \
     -lopencv_features2d420 \
-    -lopencv_calib3d420
+    -lopencv_calib3d420\
+    -lopencv_objdetect420
 
 RESOURCES += \
     res/resources.qrc
