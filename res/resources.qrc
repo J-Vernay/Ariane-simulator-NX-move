@@ -5,6 +5,7 @@
     <qresource prefix="/res/textures">
         <file alias="logoTSE.png">textures/logoTSE.png</file>
         <file alias="hourglass.png">textures/hourglass.png</file>
+    </qresource>
     <qresource prefix="/res/xml">
         <file alias="nose.xml">xml/haarcascade_mcs_nose.xml</file>
         <file alias="frontalface.xml">xml/lbpcascade_frontalface_improved.xml</file>
