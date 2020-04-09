@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <QDebug>
 
-CameraWidget::CameraWidget(ThreadWrapper& tw, QWidget *parent) :
+CameraWidget::CameraWidget(CameraThread& tw, QWidget *parent) :
     QWidget(parent),
     mTW(tw)
 {
@@ -22,8 +22,8 @@ void CameraWidget::reloadCameraDisplay() {
     auto [ state, frame ] = mTW.getStateAndFrame();
 
     auto debugFrame = drawDebug(frame, state);
-    qDebug() << getName(findDirection(state));
 
     mLabel->setPixmap(QPixmap::fromImage(convertToQImage(debugFrame)));
     mLabel->resize(mLabel->pixmap()->size());
+    this->resize(mLabel->size());
 }

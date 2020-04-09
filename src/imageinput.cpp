@@ -182,14 +182,14 @@ cv::Mat drawDebug(cv::Mat frameIn, State const& state) noexcept {
     // "vecteur" entre le nez et le visage
     cv::line(frame, getCenter(state.faceRect), state.noseCenter, { 255, 255, 0 }, 2);
 
-    cv::line(frame, cv::Point(face.x + 0.4*face.width, 0),
-                    cv::Point(face.x + 0.4*face.width, frameHeight), { 0, 255, 0 }, 1);
-    cv::line(frame, cv::Point(face.x + 0.6*face.width, 0),
-                    cv::Point(face.x + 0.6*face.width, frameHeight), { 0, 255, 0 }, 1);
-    cv::line(frame, cv::Point(0, face.y + 0.4*face.height),
-                    cv::Point(frameWidth, face.y + 0.4*face.height), { 0, 255, 0 }, 1);
-    cv::line(frame, cv::Point(0, face.y + 0.55*face.height),
-                    cv::Point(frameWidth, face.y + 0.55*face.height), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(face.x + 0.3*face.width, 0),
+                    cv::Point(face.x + 0.3*face.width, frameHeight), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(face.x + 0.7*face.width, 0),
+                    cv::Point(face.x + 0.7*face.width, frameHeight), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(0, face.y + 0.3*face.height),
+                    cv::Point(frameWidth, face.y + 0.3*face.height), { 0, 255, 0 }, 1);
+    cv::line(frame, cv::Point(0, face.y + 0.65*face.height),
+                    cv::Point(frameWidth, face.y + 0.65*face.height), { 0, 255, 0 }, 1);
 
     return frame;
 }
@@ -199,16 +199,16 @@ Direction findDirection(State const& state) noexcept {
 
     if (!state.faceRect.empty()) {
         cv::Point_<float> relativePos = (state.noseCenter - getCenter(state.faceRect));
-        relativePos.x /= state.faceRect.width / 2;
-        relativePos.y /= state.faceRect.height / 2;
+        relativePos.x /= state.faceRect.width;
+        relativePos.y /= state.faceRect.height;
 
         if (std::hypot(relativePos.x, relativePos.y) > 1) {
             direction = Direction::UNKNOWN; // abérrant que le nez soit très loin du visage
         } else {
-            if      (relativePos.x < -0.1 ) direction = Direction::RIGHT;
-            else if (relativePos.x >  0.1 ) direction = Direction::LEFT;
-            else if (relativePos.y < -0.1 ) direction = Direction::UP;
-            else if (relativePos.y >  0.05) direction = Direction::DOWN;
+            if      (relativePos.y < -0.2 ) direction = Direction::UP;
+            else if (relativePos.y >  0.15) direction = Direction::DOWN;
+            else if (relativePos.x < -0.2 ) direction = Direction::RIGHT;
+            else if (relativePos.x >  0.2 ) direction = Direction::LEFT;
             else                            direction = Direction::NONE;
         }
     }
@@ -216,13 +216,13 @@ Direction findDirection(State const& state) noexcept {
     return direction;
 }
 
-ThreadWrapper::ThreadWrapper(int videoCaptureIndex) :
+CameraThread::CameraThread(int videoCaptureIndex) :
     mVideoCapture(videoCaptureIndex),
     mActive(mVideoCapture.isOpened())
 {
     if (mActive) {
-        mVideoCapture.set(cv::CAP_PROP_FRAME_WIDTH,240);
-        mVideoCapture.set(cv::CAP_PROP_FRAME_HEIGHT,180);
+        mVideoCapture.set(cv::CAP_PROP_FRAME_WIDTH,mCameraFrameWidth);
+        mVideoCapture.set(cv::CAP_PROP_FRAME_HEIGHT,mCameraFrameHeight);
 
         mThread = std::thread([&] {
             cv::Mat frame;

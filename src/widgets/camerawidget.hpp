@@ -11,15 +11,13 @@ class CameraWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit CameraWidget(ThreadWrapper& tw, QWidget *parent = nullptr);
-
-
+    explicit CameraWidget(CameraThread& tw, QWidget *parent = nullptr);
 
 private slots:
     void reloadCameraDisplay();
 
 private:
-    ThreadWrapper& mTW;
+    CameraThread& mTW;
 
     QVBoxLayout* mLayout;
     QLabel* mLabel;

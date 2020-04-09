@@ -6,6 +6,8 @@
 #include "glscenewidget.hpp"
 #include "mazemapwidget.hpp"
 #include "timerwidget.hpp"
+#include "camerawidget.hpp"
+#include "../imageinput.hpp"
 #include "../gamelogic.hpp"
 
 /**
@@ -24,10 +26,18 @@ public:
     void keyPressEvent(QKeyEvent *event) override;
 
 private:
+
     // Widgets contenus
     GLSceneWidget mSceneWidget;
     MazeMapWidget mMapWidget;
     TimerWidget mTimerWidget;
+
+    // Thread et widget pour la camera
+    CameraThread mCameraThread;
+    CameraWidget mCameraWidget;
+    // timer pour vérifier la direction détectée périodiquement
+    QTimer* mCameraTimer;
+    GameLogic::Direction mLastDir = GameLogic::STOP;
 
     // Layout principal
     QVBoxLayout * mMainLayout;
@@ -40,6 +50,7 @@ private:
     GameLogic mGameLogic;
 
 private slots:
+    void getCameraDirection();
     void quit();
 
 };
