@@ -9,6 +9,7 @@ const int DEFAULT_MAZE_HEIGHT = 8;
 const int FPS = 30;
 
 const double COLLISION_MARGIN = 0.1;
+const double COLLISION_ITEM_MARGIN = 0.33;
 
 GameLogic::GameLogic(GLSceneWidget * openGLSceneWidget, MazeMapWidget * miniMapWidget, TimerWidget * timerWidget, QObject * parent)
     : QObject(parent), mSceneWidget(openGLSceneWidget), mMapWidget(miniMapWidget), mTimerWidget(timerWidget),
@@ -119,10 +120,10 @@ void GameLogic::handleItemCollisions(double playerx, double playery)
     for (auto iterItem = mItems.begin(); iterItem < mItems.end();)
     {
         AbstractItem * item = *iterItem;
-        xMin = item->getPosX() - 2*item->getRadius();
-        xMax = item->getPosX() + 2*item->getRadius();
-        yMin = item->getPosY() - 2*item->getRadius();
-        yMax = item->getPosY() + 2*item->getRadius();
+        xMin = item->getPosX() - (1 + COLLISION_ITEM_MARGIN)*item->getRadius();
+        xMax = item->getPosX() + (1 + COLLISION_ITEM_MARGIN)*item->getRadius();
+        yMin = item->getPosY() - (1 + COLLISION_ITEM_MARGIN)*item->getRadius();
+        yMax = item->getPosY() + (1 + COLLISION_ITEM_MARGIN)*item->getRadius();
 
         // Cas de collision
         if (playerx > xMin && playerx < xMax && playery > yMin && playery < yMax)
