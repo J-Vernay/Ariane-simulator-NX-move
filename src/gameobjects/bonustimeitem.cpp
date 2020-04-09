@@ -1,7 +1,7 @@
 #include "bonustimeitem.hpp"
 
-BonusTimeItem::BonusTimeItem(TimerWidget * timerWidget, double xpos, double ypos, double radius, QString texturePath)
-    : AbstractItem(xpos, ypos, radius, texturePath), mTimerWidget(timerWidget)
+BonusTimeItem::BonusTimeItem(TimerWidget * timerWidget, double xpos, double ypos, QString texturePath)
+    : AbstractItem(xpos, ypos, texturePath), mTimerWidget(timerWidget)
 {
 
 }

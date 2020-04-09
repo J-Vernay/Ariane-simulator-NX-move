@@ -227,7 +227,6 @@ void GameLogic::restart()
     // Génération de l'arrivée
     int goalXIdx = freeCoords.back().x;
     int goalYIdx = freeCoords.back().y;
-    qDebug() << goalXIdx << ", " << goalYIdx;
     freeCoords.pop_back();
     mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
 
@@ -235,7 +234,6 @@ void GameLogic::restart()
     {
         int bonustimeXIdx = freeCoords.back().x;
         int bonustimeYIdx = freeCoords.back().y;
-        qDebug() << bonustimeXIdx << ", " << bonustimeYIdx;
         freeCoords.pop_back();
         mItems.push_back(new BonusTimeItem(mTimerWidget, bonustimeXIdx + 0.5, bonustimeYIdx + 0.5));
     }
@@ -244,7 +242,6 @@ void GameLogic::restart()
     {
         int penaltytimeXIdx = freeCoords.back().x;
         int penaltytimeYIdx = freeCoords.back().y;
-        qDebug() << penaltytimeXIdx << ", " << penaltytimeYIdx;
         freeCoords.pop_back();
         mItems.push_back(new PenaltyTimeItem(mTimerWidget, penaltytimeXIdx + 0.5, penaltytimeYIdx + 0.5));
     }

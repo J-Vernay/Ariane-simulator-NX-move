@@ -23,7 +23,7 @@ protected:
     QString mTexturePath;
 
 public:
-    AbstractItem(double xpos, double ypos, double radius = 0.1, QString texturePath = QString(""), bool isBad = false);
+    AbstractItem(double xpos, double ypos, QString texturePath = QString(""), double radius = 0.15, bool isBad = false);
     virtual ~AbstractItem(){};
 
     void initGL();

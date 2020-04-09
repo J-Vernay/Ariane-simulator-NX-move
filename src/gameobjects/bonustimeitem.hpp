@@ -10,7 +10,7 @@ class BonusTimeItem : public AbstractItem
 protected:
     int deltaMs = 20 * 1000;
 public:
-    BonusTimeItem(TimerWidget * timerWidget, double xpos, double ypos, double radius = 0.1, QString texturePath = QString(":/res/textures/hourglass.png"));
+    BonusTimeItem(TimerWidget * timerWidget, double xpos, double ypos, QString texturePath = QString(":/res/textures/hourglass.png"));
 
     void onCollision() override;
 };
