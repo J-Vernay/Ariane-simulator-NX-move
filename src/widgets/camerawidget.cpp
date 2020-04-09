@@ -22,7 +22,6 @@ void CameraWidget::reloadCameraDisplay() {
     auto [ state, frame ] = mTW.getStateAndFrame();
 
     auto debugFrame = drawDebug(frame, state);
-    qDebug() << getName(findDirection(state));
 
     mLabel->setPixmap(QPixmap::fromImage(convertToQImage(debugFrame)));
     mLabel->resize(mLabel->pixmap()->size());

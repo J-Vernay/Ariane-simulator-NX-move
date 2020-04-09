@@ -203,21 +203,49 @@ void GameLogic::restart()
 
     mItems.clear();
 
-    int goalXIdx = rand() % mMaze.getWidth();
-    int goalYIdx = rand() % mMaze.getHeight();
+    // Création de tous les couples de coordonnées libres (autre que (0,0), qui est la position du joueur)
+    struct CellCoord
+    {
+        int width = 0;
+        int x = 0, y = 0;
+        CellCoord & operator++()
+        {
+            if ((++x %= width) == 0) ++y;
+            return *this;
+        }
+    };
+    std::vector<CellCoord> freeCoords(mMaze.getWidth() * mMaze.getHeight() - 1);
+    CellCoord initialCellCoord = ++CellCoord{mMaze.getWidth()};
+    std::iota(freeCoords.begin(), freeCoords.end(), initialCellCoord);
+
+    // On enlève la case de départ des coordonnées possibles
+    freeCoords.erase(freeCoords.begin());
+
+    //Mélange aléatoire des positions
+    std::random_shuffle(freeCoords.begin(), freeCoords.end());
+
+    // Génération de l'arrivée
+    int goalXIdx = freeCoords.back().x;
+    int goalYIdx = freeCoords.back().y;
+    qDebug() << goalXIdx << ", " << goalYIdx;
+    freeCoords.pop_back();
     mItems.push_back(new GoalItem(&mMaze, mMapWidget, goalXIdx + 0.5, goalYIdx + 0.5));
 
     if (mIsBonusTimeEnabled)
     {
-        int bonustimeXIdx = rand() % mMaze.getWidth();
-        int bonustimeYIdx = rand() % mMaze.getHeight();
+        int bonustimeXIdx = freeCoords.back().x;
+        int bonustimeYIdx = freeCoords.back().y;
+        qDebug() << bonustimeXIdx << ", " << bonustimeYIdx;
+        freeCoords.pop_back();
         mItems.push_back(new BonusTimeItem(mTimerWidget, bonustimeXIdx + 0.5, bonustimeYIdx + 0.5));
     }
 
     if (mIsPenaltyTimeEnabled)
     {
-        int penaltytimeXIdx = rand() % mMaze.getWidth();
-        int penaltytimeYIdx = rand() % mMaze.getHeight();
+        int penaltytimeXIdx = freeCoords.back().x;
+        int penaltytimeYIdx = freeCoords.back().y;
+        qDebug() << penaltytimeXIdx << ", " << penaltytimeYIdx;
+        freeCoords.pop_back();
         mItems.push_back(new PenaltyTimeItem(mTimerWidget, penaltytimeXIdx + 0.5, penaltytimeYIdx + 0.5));
     }
 
