@@ -5,12 +5,12 @@
 #include <GL/glu.h>
 #include <QDebug>
 
-const double Z_CENTER = 0.3;
+const double Z_CENTER = 0.5;
 const double Z_VARIATION = 0.1;
 const double Z_SPEED = 1/500.0;
 const double ANGLE_SPEED = 0.7;
 
-AbstractItem::AbstractItem(double xpos, double ypos, double radius, QString texturePath, bool isBad)
+AbstractItem::AbstractItem(double xpos, double ypos, QString texturePath, double radius, bool isBad)
     : mPosx(xpos), mPosy(ypos), mRadius(radius), mIsBad(isBad),
       mQuadric(gluNewQuadric(), gluDeleteQuadric), mTexturePath(texturePath)
 {

@@ -14,7 +14,7 @@ class GoalItem : public AbstractItem
     MazeMapWidget * mMapWidget;
 
 public:
-    GoalItem(Maze * mazeptr, MazeMapWidget * minimapptr, double xpos, double ypos, double radius = 0.1, QString texturePath = QString(":/res/textures/logoTSE.png"));
+    GoalItem(Maze * mazeptr, MazeMapWidget * minimapptr, double xpos, double ypos, QString texturePath = QString(":/res/textures/logoTSE.png"));
 
     void onCollision() override;
 };

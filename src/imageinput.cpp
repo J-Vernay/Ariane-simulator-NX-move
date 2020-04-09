@@ -13,7 +13,6 @@ namespace { // namespace anonyme : les fonctions définies ici ne sont pas acces
 cv::CascadeClassifier loadClassifierFromResource(QString resource)
 {
     cv::CascadeClassifier classifier;
-    qDebug() << QDir::currentPath() << '\n';
 
     QFile file(resource);
     if(!file.open(QIODevice::ReadOnly | QFile::Text))

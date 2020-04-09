@@ -1,7 +1,7 @@
 #include "goalitem.hpp"
 
-GoalItem::GoalItem(Maze * mazeptr, MazeMapWidget * minimapptr, double xpos, double ypos, double radius, QString texturePath)
-    : AbstractItem(xpos, ypos, radius, texturePath), mMaze(mazeptr), mMapWidget(minimapptr)
+GoalItem::GoalItem(Maze * mazeptr, MazeMapWidget * minimapptr, double xpos, double ypos, QString texturePath)
+    : AbstractItem(xpos, ypos, texturePath), mMaze(mazeptr), mMapWidget(minimapptr)
 {
 
 }

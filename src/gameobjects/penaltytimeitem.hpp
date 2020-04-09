@@ -6,8 +6,8 @@
 class PenaltyTimeItem : public BonusTimeItem
 {
 public:
-    PenaltyTimeItem(TimerWidget * timerWidget, double xpos, double ypos, double radius = 0.1, QString texturePath = QString(":/res/textures/hourglass.png"))
-        : BonusTimeItem(timerWidget, xpos, ypos, radius, texturePath){ deltaMs *= -1; mIsBad = true; };
+    PenaltyTimeItem(TimerWidget * timerWidget, double xpos, double ypos, QString texturePath = QString(":/res/textures/hourglass.png"))
+        : BonusTimeItem(timerWidget, xpos, ypos, texturePath){ deltaMs *= -1; mIsBad = true; };
 };
 
 #endif // PENALTYTIMEITEM_HPP
