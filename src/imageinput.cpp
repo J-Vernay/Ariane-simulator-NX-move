@@ -199,8 +199,8 @@ Direction findDirection(State const& state) noexcept {
 
     if (!state.faceRect.empty()) {
         cv::Point_<float> relativePos = (state.noseCenter - getCenter(state.faceRect));
-        relativePos.x /= state.faceRect.width / 2;
-        relativePos.y /= state.faceRect.height / 2;
+        relativePos.x /= state.faceRect.width;
+        relativePos.y /= state.faceRect.height;
 
         if (std::hypot(relativePos.x, relativePos.y) > 1) {
             direction = Direction::UNKNOWN; // abérrant que le nez soit très loin du visage
@@ -216,7 +216,7 @@ Direction findDirection(State const& state) noexcept {
     return direction;
 }
 
-ThreadWrapper::ThreadWrapper(int videoCaptureIndex) :
+CameraThread::CameraThread(int videoCaptureIndex) :
     mVideoCapture(videoCaptureIndex),
     mActive(mVideoCapture.isOpened())
 {

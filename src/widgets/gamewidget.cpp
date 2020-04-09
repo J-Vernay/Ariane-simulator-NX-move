@@ -67,7 +67,6 @@ void GameWidget::keyPressEvent(QKeyEvent *) {}
 
 void GameWidget::getCameraDirection()
 {
-    qDebug() << "TEST";
     switch (mCameraThread.getDirection()) {
     case Direction::UP:
         mLastDir = GameLogic::Direction::FORWARD;

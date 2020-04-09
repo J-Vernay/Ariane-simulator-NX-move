@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TestWebCamQt
+TARGET = ArianeSimulator
 TEMPLATE = app
 QT       += core gui opengl widgets
 CONFIG += c++17

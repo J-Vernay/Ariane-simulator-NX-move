@@ -33,7 +33,7 @@ private:
     TimerWidget mTimerWidget;
 
     // Thread et widget pour la camera
-    ThreadWrapper mCameraThread;
+    CameraThread mCameraThread;
     CameraWidget mCameraWidget;
     // timer pour vérifier la direction détectée périodiquement
     QTimer* mCameraTimer;

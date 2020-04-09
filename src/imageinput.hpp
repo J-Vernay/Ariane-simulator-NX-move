@@ -36,9 +36,10 @@ cv::Point_<T> getCenter(cv::Rect_<T> const& r) noexcept {
     return (r.tl() + r.br()) / 2;
 }
 
-class ThreadWrapper {
+class CameraThread {
 public:
-    ThreadWrapper(int videoCaptureIndex = 0);
+    CameraThread(int videoCaptureIndex = 0);
+    ~CameraThread() { stop(); }
 
     bool isActive() { std::unique_lock lg(mMtx); return mActive; }
     void stop() { std::unique_lock lg(mMtx); mActive = false; }

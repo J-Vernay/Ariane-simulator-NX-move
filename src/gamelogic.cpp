@@ -119,10 +119,10 @@ void GameLogic::handleItemCollisions(double playerx, double playery)
     for (auto iterItem = mItems.begin(); iterItem < mItems.end();)
     {
         AbstractItem * item = *iterItem;
-        xMin = item->getPosX() - item->getRadius();
-        xMax = item->getPosX() + item->getRadius();
-        yMin = item->getPosY() - item->getRadius();
-        yMax = item->getPosY() + item->getRadius();
+        xMin = item->getPosX() - 2*item->getRadius();
+        xMax = item->getPosX() + 2*item->getRadius();
+        yMin = item->getPosY() - 2*item->getRadius();
+        yMax = item->getPosY() + 2*item->getRadius();
 
         // Cas de collision
         if (playerx > xMin && playerx < xMax && playery > yMin && playery < yMax)
