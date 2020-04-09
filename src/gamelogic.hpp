@@ -14,7 +14,6 @@
 
 #include <QTimer>
 #include <QTime>
-#include <algorithm>
 
 /**
  * @brief Classe principale de la logique de jeu

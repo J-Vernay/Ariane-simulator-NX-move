@@ -2,8 +2,8 @@
 #include <opencv2/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include <QDebug>
 #include <QDir>
+#include <QTextStream>
 #include <QFile>
 #include <stdexcept>
 #include <thread>

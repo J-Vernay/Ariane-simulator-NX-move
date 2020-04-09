@@ -1,7 +1,6 @@
 #include "mazemapwidget.hpp"
 #include <QPainter>
 #include <cmath>
-#include <QDebug>
 
 const double MAXOPACITY = 0.7;
 

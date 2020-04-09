@@ -2,7 +2,6 @@
 
 #include <QTime>
 #include <QFontDatabase>
-#include <QDebug>
 
 const unsigned int TIMER_REFRESH_PER_SECOND = 20;
 

@@ -3,7 +3,6 @@
 #include <cmath>
 #include <QGLWidget>
 #include <GL/glu.h>
-#include <QDebug>
 
 const double Z_CENTER = 0.5;
 const double Z_VARIATION = 0.1;

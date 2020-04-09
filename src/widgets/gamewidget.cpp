@@ -2,7 +2,6 @@
 
 #include <QPushButton>
 #include <QKeyEvent>
-#include <QDebug>
 
 // Declarations des constantes
 const unsigned int WIN_WIDTH  = 1600;

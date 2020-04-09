@@ -3,7 +3,6 @@
 #include <GL/glu.h>
 #include <QDesktopWidget>
 #include <cmath>
-#include <QDebug>
 
 const GLdouble X_STEP = 10;
 const GLdouble Y_STEP = -X_STEP;

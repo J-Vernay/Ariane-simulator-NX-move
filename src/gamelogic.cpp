@@ -1,6 +1,5 @@
 #include "gamelogic.hpp"
 
-#include <QDebug>
 #include <QMessageBox>
 
 const int DEFAULT_MAZE_WIDTH = 10;
