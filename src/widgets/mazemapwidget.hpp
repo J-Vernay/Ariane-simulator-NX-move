@@ -17,6 +17,7 @@ class MazeMapWidget : public QWidget
     Q_OBJECT
 
 public:
+    // Constructeur
     explicit MazeMapWidget(QWidget *parent = nullptr);
 
     // Fonction de dessin

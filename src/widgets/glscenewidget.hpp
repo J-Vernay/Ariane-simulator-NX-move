@@ -14,10 +14,10 @@ class GLSceneWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
-    Maze * mMaze;
-    Player * mPlayer;
+    Maze * mMaze;           // Labyrinthe
+    Player * mPlayer;       // Joueur
 
-    std::vector<AbstractItem *> * mGameItems;
+    std::vector<AbstractItem *> * mGameItems;   // Objets collectibles
 
 public:
     // Constructeur
@@ -48,8 +48,6 @@ protected:
 
     // Affichage du labyrinthe
     void displayWorld();
-
-
 };
 
 #endif // GLSCENEWIDGET_HPP

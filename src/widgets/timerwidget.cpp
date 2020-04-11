@@ -5,6 +5,7 @@
 
 const unsigned int TIMER_REFRESH_PER_SECOND = 20;
 
+
 TimerWidget::TimerWidget(QWidget *parent)
     : QWidget(parent), mTimerLabel(this), mTimer(this), mPauseTimeMs(0)
 {

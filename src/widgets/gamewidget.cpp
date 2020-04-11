@@ -62,8 +62,6 @@ void GameWidget::resizeEvent(QResizeEvent *event)
     update();
 }
 
-void GameWidget::keyPressEvent(QKeyEvent *) {}
-
 void GameWidget::getCameraDirection()
 {
     switch (mCameraThread.getDirection()) {
